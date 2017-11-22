@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="对于 yield与yield from的语法，官方给出的解释Link 12yield &amp;lt;expr&amp;gt;yield from &amp;lt;expr&amp;gt; 等于 12(yield &amp;lt;expr&amp;gt;)(yield from &amp;lt;expr&amp;gt;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="yield与yield from备忘录">
+<meta property="og:url" content="http://yoursite.com/2017/11/21/yield与yield-from备忘录/index.html">
+<meta property="og:site_name" content="村里最好的博客">
+<meta property="og:description" content="对于 yield与yield from的语法，官方给出的解释Link 12yield &amp;lt;expr&amp;gt;yield from &amp;lt;expr&amp;gt; 等于 12(yield &amp;lt;expr&amp;gt;)(yield from &amp;lt;expr&amp;gt;) 要理解yield需要先介绍几个概念 Iterables（可迭代对象）  An object capable of returning its">
+<meta property="og:updated_time" content="2017-11-22T14:29:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="yield与yield from备忘录">
+<meta name="twitter:description" content="对于 yield与yield from的语法，官方给出的解释Link 12yield &amp;lt;expr&amp;gt;yield from &amp;lt;expr&amp;gt; 等于 12(yield &amp;lt;expr&amp;gt;)(yield from &amp;lt;expr&amp;gt;) 要理解yield需要先介绍几个概念 Iterables（可迭代对象）  An object capable of returning its">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/11/21/yield与yield-from备忘录/"/>
+
+
+
+
+
+  <title>yield与yield from备忘录 | 村里最好的博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">村里最好的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/21/yield与yield-from备忘录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="刘冰鉴">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="村里最好的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">yield与yield from备忘录</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-21T16:49:05+08:00">
+                2017-11-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>对于 <code>yield</code>与<code>yield from</code>的语法，官方给出的解释<a href="https://docs.python.org/3.6/reference/simple_stmts.html#yield" target="_blank" rel="noopener">Link</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">yield</span> &lt;expr&gt;</span><br><span class="line"><span class="keyword">yield</span> <span class="keyword">from</span> &lt;expr&gt;</span><br></pre></td></tr></table></figure>
+<p>等于</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">yield</span> &lt;expr&gt;)</span><br><span class="line">(<span class="keyword">yield</span> <span class="keyword">from</span> &lt;expr&gt;)</span><br></pre></td></tr></table></figure>
+<p>要理解<code>yield</code>需要先介绍几个概念</p>
+<h3 id="Iterables（可迭代对象）"><a href="#Iterables（可迭代对象）" class="headerlink" title="Iterables（可迭代对象）"></a><code>Iterables</code>（可迭代对象）</h3><blockquote>
+<p> An object capable of returning its members one at a time. Examples of iterables include all sequence types (such as <a href="https://docs.python.org/3.6/library/stdtypes.html#list" target="_blank" rel="noopener"><code>list</code></a>, <a href="https://docs.python.org/3.6/library/stdtypes.html#str" target="_blank" rel="noopener"><code>str</code></a>, and <a href="https://docs.python.org/3.6/library/stdtypes.html#tuple" target="_blank" rel="noopener"><code>tuple</code></a>) and some non-sequence types like <a href="https://docs.python.org/3.6/library/stdtypes.html#dict" target="_blank" rel="noopener"><code>dict</code></a>, <a href="https://docs.python.org/3.6/glossary.html#term-file-object" target="_blank" rel="noopener">file objects</a>, and objects of any classes you define with an <a href="https://docs.python.org/3.6/reference/datamodel.html#object.__iter__" target="_blank" rel="noopener"><code>__iter__()</code></a> or <a href="https://docs.python.org/3.6/reference/datamodel.html#object.__getitem__" target="_blank" rel="noopener"><code>__getitem__()</code></a> method. Iterables can be used in a <a href="https://docs.python.org/3.6/reference/compound_stmts.html#for" target="_blank" rel="noopener"><code>for</code></a> loop and in many other places where a sequence is needed (<a href="https://docs.python.org/3.6/library/functions.html#zip" target="_blank" rel="noopener"><code>zip()</code></a>, <a href="https://docs.python.org/3.6/library/functions.html#map" target="_blank" rel="noopener"><code>map()</code></a>, …).</p>
+<p>  When an iterable object is passed as an argument to the built-in function <a href="https://docs.python.org/3.6/library/functions.html#iter" target="_blank" rel="noopener"><code>iter()</code></a>, it returns an iterator for the object. This iterator is good for one pass over the set of values. When using iterables, it is usually not necessary to call <a href="https://docs.python.org/3.6/library/functions.html#iter" target="_blank" rel="noopener"><code>iter()</code></a> or deal with iterator objects yourself. The <code>for</code> statement does that automatically for you, creating a temporary unnamed variable to hold the iterator for the duration of the loop. See also <a href="https://docs.python.org/3.6/glossary.html#term-iterator" target="_blank" rel="noopener">iterator</a>, <a href="https://docs.python.org/3.6/glossary.html#term-sequence" target="_blank" rel="noopener">sequence</a>, and <a href="https://docs.python.org/3.6/glossary.html#term-generator" target="_blank" rel="noopener">generator</a>.</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>mylist = [x*x <span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">3</span>)]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> i <span class="keyword">in</span> mylist :</span><br><span class="line"><span class="meta">... </span>   print(i)</span><br><span class="line"><span class="number">0</span></span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">4</span></span><br></pre></td></tr></table></figure>
+<p>所有你可以使用 <code>for .. in ..</code> 语法的叫做一个迭代器：列表，字符串，文件……你经常使用它们是因为你可以如你所愿的读取其中的元素，但是你把所有的值都存储到了内存中，如果你有大量数据的话这个方式并不是你想要的。</p>
+<h3 id="Generators（生成器）"><a href="#Generators（生成器）" class="headerlink" title="Generators（生成器）"></a><code>Generators</code>（生成器）</h3><blockquote>
+<p> A function which returns a <a href="https://docs.python.org/3.6/glossary.html#term-generator-iterator" target="_blank" rel="noopener">generator iterator</a>. It looks like a normal function except that it contains <strong><a href="https://docs.python.org/3.6/reference/simple_stmts.html#yield" target="_blank" rel="noopener"><code>yield</code></a> expressions</strong> for producing a series of values usable in a for-loop or that can be retrieved one at a time with the <a href="https://docs.python.org/3.6/library/functions.html#next" target="_blank" rel="noopener"><code>next()</code></a> function.</p>
+<p> Usually refers to a generator function, but may refer to a <em>generator iterator</em> in some contexts. In cases where the intended meaning isn’t clear, using the full terms avoids ambiguity.</p>
+</blockquote>
+<p>生成器是可以迭代的，但是你 <strong>只可以读取它一次</strong> ，因为它并不把所有的值放在内存中，它是实时地生成数据:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>mygenerator = (x*x <span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">3</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> i <span class="keyword">in</span> mygenerator :</span><br><span class="line"><span class="meta">... </span>   print(i)</span><br><span class="line"><span class="number">0</span></span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">4</span></span><br></pre></td></tr></table></figure>
+<p>看起来除了把 <code>[]</code> 换成 <code>()</code> 外没什么不同。但是，你不可以再次使用 <code>for i inmygenerator</code> , 因为生成器只能被迭代一次：先计算出0，然后继续计算1，然后计算4，一个跟一个的…</p>
+<p>其实这里跟<strong>流的概念</strong>（计算机程序的构造与解释）是一样的，所谓流就是一个语法糖而已，如果用Python来实现，应该可以这么做:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Generator</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, l)</span>:</span></span><br><span class="line">        self.l = l</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__iter__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__next__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> len(self.l) &gt; <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> self.l.pop(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">raise</span> StopIteration()</span><br><span class="line">        </span><br><span class="line"></span><br><span class="line">In [<span class="number">1</span>]: <span class="keyword">for</span> i <span class="keyword">in</span> Generator([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]):</span><br><span class="line">   ...:     print(i)</span><br><span class="line">   ...:</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="number">4</span></span><br></pre></td></tr></table></figure>
+<p>当然，我这只是简单范例，以后我会再结合Python源码来说明生成器是如何实现的（挖了个大坑）。</p>
+<h3 id="yield语法"><a href="#yield语法" class="headerlink" title="yield语法"></a><code>yield</code>语法</h3><p>先给出官方文档连接（<a href="https://docs.python.org/3.6/reference/expressions.html#yield-expressions" target="_blank" rel="noopener">Link</a>）</p>
+<p><code>yield</code> 是一个类似 <code>return</code> 的关键字，只是这个函数返回的是个生成器。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="function"><span class="keyword">def</span> <span class="title">createGenerator</span><span class="params">()</span> :</span></span><br><span class="line"><span class="meta">... </span>   mylist = range(<span class="number">3</span>)</span><br><span class="line"><span class="meta">... </span>   <span class="keyword">for</span> i <span class="keyword">in</span> mylist :</span><br><span class="line"><span class="meta">... </span>       <span class="keyword">yield</span> i*i</span><br><span class="line">...</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>mygenerator = createGenerator() <span class="comment"># create a generator</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(mygenerator) <span class="comment"># mygenerator is an object!</span></span><br><span class="line">&lt;generator object createGenerator at <span class="number">0xb7555c34</span>&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> i <span class="keyword">in</span> mygenerator:</span><br><span class="line"><span class="meta">... </span>    print(i)</span><br><span class="line"><span class="number">0</span></span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">4</span></span><br></pre></td></tr></table></figure>
+<p>这个例子没什么用途，但是它让你知道，这个函数会返回一大批你只需要读一次的值.</p>
+<p>为了精通 <code>yield</code> ,你必须要理解：<strong>当你调用这个函数的时候，函数内部的代码并不立马执行</strong> ，这个函数只是返回一个生成器对象，这有点蹊跷不是吗。</p>
+<p>那么，函数内的代码什么时候执行呢？当你使用for进行迭代的时候.</p>
+<p>现在到了关键点了！</p>
+<p>第一次迭代中你的函数会执行，从开始到达 <code>yield</code> 关键字，然后返回 <code>yield</code> 后的值作为第一次迭代的返回值. 然后，每次执行这个函数都会继续执行你在函数内部定义的那个循环的下一次，再返回那个值，直到没有可以返回的。</p>
+<p>如果生成器内部没有定义 <code>yield</code> 关键字，那么这个生成器被认为成空的。这种情况可能因为是循环进行没了，或者是没有满足 <code>if/else</code> 条件。</p>
+<p>看到上述解释，你可以这样认为，<code>yield</code>是实现一个语法糖，其语法是将这个函数本身传了出去，并生成一个对象，这个对象是一个生成器，其会执行一次<code>yield</code>封装的函数然后将结果作为下一次的返回值（第一次的返回值是直接返回，或者这样更好实现，就是如果检测到函数有<code>yield</code>关键字则直接封装为一个生成器对象，然后调用就是先执行一次<code>yield</code>封装的函数，然后再返回数据）。</p>
+<h3 id="yield-from"><a href="#yield-from" class="headerlink" title="yield from"></a><code>yield from</code></h3><p>该语法是在<a href="https://www.python.org/dev/peps/pep-0380/" target="_blank" rel="noopener">PEP380</a>中被定义的。总之大意是原本的yield语句只能将CPU控制权 还给直接调用者，当你想要将一个generator或者coroutine里带有 yield语句的逻辑重构到另一个generator（原文是subgenerator） 里的时候，会非常麻烦，因为外面的generator要负责为里面的 generator做消息传递；所以某人有个想法是让python把消息传递封装起来，使其对开发者透明，于是就有了<code>yield from</code>。</p>
+<p><code>yield from x()</code>其中的x应该返回一个可迭代的对象(<code>Iterables</code>)，这样整个表达式会返回一个生成器(<code>Generators</code>)，我们将整个表达式称为y(就是说<code>y=lambda:yield from x()</code>)。</p>
+<blockquote>
+<p> The full semantics of the yield from expression can be described in terms of the generator protocol as follows:</p>
+<ul>
+<li>Any values that the iterator yields（x） are passed directly to the caller（y）.</li>
+<li>Any values sent to the delegating generator using send() are passed directly to the iterator. If the sent value is None, the iterator’s __next__() method is called. If the sent value is not None, the iterator’s send() method is called. If the call raises StopIteration, the delegating generator is resumed. Any other exception is propagated to the delegating generator.</li>
+<li>Exceptions other than GeneratorExit thrown into the delegating generator are passed to the throw() method of the iterator. If the call raises StopIteration, the delegating generator is resumed. Any other exception is propagated to the delegating generator.</li>
+<li>If a GeneratorExit exception is thrown into the delegating generator, or the close() method of the delegating generator is called, then the close() method of the iterator is called if it has one. If this call results in an exception, it is propagated to the delegating generator. Otherwise, GeneratorExit is raised in the delegating generator.</li>
+<li>The value of the yield from expression is the first argument to the StopIteration exception raised by the iterator when it terminates.</li>
+<li>return expr in a generator causes StopIteration(expr) to be raised upon exit from the generator.</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">1</span>]: <span class="function"><span class="keyword">def</span> <span class="title">reader</span><span class="params">()</span>:</span></span><br><span class="line">   ...:     <span class="string">"""A generator that fakes a read from a file, socket, etc."""</span></span><br><span class="line">   ...:     <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">4</span>):</span><br><span class="line">   ...:         <span class="keyword">yield</span> <span class="string">'&lt;&lt; %s'</span> % i</span><br><span class="line">   ...:</span><br><span class="line"></span><br><span class="line">In [<span class="number">2</span>]: <span class="function"><span class="keyword">def</span> <span class="title">reader_wrapper</span><span class="params">(g)</span>:</span></span><br><span class="line">   ...:     <span class="comment"># Manually iterate over data produced by reader</span></span><br><span class="line">   ...:     <span class="keyword">for</span> v <span class="keyword">in</span> g:</span><br><span class="line">   ...:         <span class="keyword">yield</span> v</span><br><span class="line">   ...:</span><br><span class="line"></span><br><span class="line">In [<span class="number">3</span>]: wrap = reader_wrapper(reader())</span><br><span class="line">   ...: <span class="keyword">for</span> i <span class="keyword">in</span> wrap:</span><br><span class="line">   ...:     print(i)</span><br><span class="line">   ...:</span><br><span class="line">&lt;&lt; <span class="number">0</span></span><br><span class="line">&lt;&lt; <span class="number">1</span></span><br><span class="line">&lt;&lt; <span class="number">2</span></span><br><span class="line">&lt;&lt; <span class="number">3</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">4</span>]: <span class="function"><span class="keyword">def</span> <span class="title">reader_wrapper</span><span class="params">(g)</span>:</span></span><br><span class="line">   ...:     <span class="keyword">yield</span> <span class="keyword">from</span> g</span><br><span class="line">   ...:</span><br><span class="line"></span><br><span class="line">In [<span class="number">5</span>]: wrap = reader_wrapper(reader())</span><br><span class="line">   ...: <span class="keyword">for</span> i <span class="keyword">in</span> wrap:</span><br><span class="line">   ...:     print(i)</span><br><span class="line">   ...:</span><br><span class="line">&lt;&lt; <span class="number">0</span></span><br><span class="line">&lt;&lt; <span class="number">1</span></span><br><span class="line">&lt;&lt; <span class="number">2</span></span><br><span class="line">&lt;&lt; <span class="number">3</span></span><br></pre></td></tr></table></figure>
+<p>这篇文章作为介绍Python的<code>asyncio</code>的基础文章。</p>
+<p>参考文章：</p>
+<ul>
+<li>Python官方文档</li>
+<li>PEP380</li>
+<li><a href="http://stackoverflow.com/questions/9708902/in-practice-what-are-the-main-uses-for-the-new-yield-from-syntax-in-python-3" target="_blank" rel="noopener">In practice, what are the main uses for the new “yield from” syntax in Python 3.3?</a></li>
+<li><a href="http://stackoverflow.com/questions/231767/what-does-the-yield-keyword-do" target="_blank" rel="noopener">What does the “yield” keyword do?</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/21/LinkedHashMap源码解析/" rel="next" title="LinkedHashMap源码解析">
+                <i class="fa fa-chevron-left"></i> LinkedHashMap源码解析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/21/浅谈动态规划/" rel="prev" title="浅谈动态规划">
+                浅谈动态规划 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Übersicht
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="刘冰鉴" />
+          <p class="site-author-name" itemprop="name">刘冰鉴</p>
+           
+              <p class="site-description motion-element" itemprop="description">issue</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-name">Artikel</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Iterables（可迭代对象）"><span class="nav-number">1.</span> <span class="nav-text">Iterables（可迭代对象）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generators（生成器）"><span class="nav-number">2.</span> <span class="nav-text">Generators（生成器）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#yield语法"><span class="nav-number">3.</span> <span class="nav-text">yield语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#yield-from"><span class="nav-number">4.</span> <span class="nav-text">yield from</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">刘冰鉴</span>
+</div>
+
+
+<div class="powered-by">
+  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

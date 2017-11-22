@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="Akka 基础功能生命周期 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Akka 基础功能">
+<meta property="og:url" content="http://yoursite.com/2017/11/21/Akka-基础功能/index.html">
+<meta property="og:site_name" content="村里最好的博客">
+<meta property="og:description" content="Akka 基础功能生命周期 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979">
+<meta property="og:image" content="https://github.com/BingLau7/blog/blob/master/Image/blog_25/actor_lifecycle.png?raw=true">
+<meta property="og:updated_time" content="2017-11-22T14:29:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Akka 基础功能">
+<meta name="twitter:description" content="Akka 基础功能生命周期 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979">
+<meta name="twitter:image" content="https://github.com/BingLau7/blog/blob/master/Image/blog_25/actor_lifecycle.png?raw=true">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/11/21/Akka-基础功能/"/>
+
+
+
+
+
+  <title>Akka 基础功能 | 村里最好的博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">村里最好的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/21/Akka-基础功能/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="刘冰鉴">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="村里最好的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Akka 基础功能</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-21T16:54:31+08:00">
+                2017-11-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Akka-基础功能"><a href="#Akka-基础功能" class="headerlink" title="Akka 基础功能"></a>Akka 基础功能</h2><h3 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h3><p><img src="https://github.com/BingLau7/blog/blob/master/Image/blog_25/actor_lifecycle.png?raw=true" alt="生命周期"></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> io.binglau.scala.akka.demo</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.<span class="type">TimeUnit</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> akka.actor.&#123;<span class="type">Actor</span>, <span class="type">ActorSystem</span>, <span class="type">OneForOneStrategy</span>, <span class="type">Props</span>, <span class="type">SupervisorStrategy</span>&#125;</span><br><span class="line"><span class="keyword">import</span> akka.event.<span class="type">Logging</span></span><br><span class="line"><span class="keyword">import</span> akka.pattern.&#123;<span class="type">Backoff</span>, <span class="type">BackoffSupervisor</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> scala.concurrent.duration.<span class="type">Duration</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LifeCycle</span> <span class="keyword">extends</span> <span class="title">Actor</span></span>&#123;</span><br><span class="line">  <span class="keyword">val</span> log = <span class="type">Logging</span>(context.system, <span class="keyword">this</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Actor 对象被创建后启动前该方法会被调用</span></span><br><span class="line">  <span class="comment">// Actor 对象是通过异步方式创建的</span></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">preStart</span></span>(): <span class="type">Unit</span> = &#123;</span><br><span class="line">    log.info(<span class="string">"preStart"</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Actor 对象停止运行时，该方法会被调用</span></span><br><span class="line">  <span class="comment">// 当 ActorSystem 或 ActorContext 对象（Actor 对象中会</span></span><br><span class="line">  <span class="comment">// 含有一个 ActorContext 对象，可通过 context 方法获得）中的</span></span><br><span class="line">  <span class="comment">// stop(ActorRef) 方法被调用是,Actor对象会以一部方式停止运行.</span></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">postStop</span></span>(): <span class="type">Unit</span> =  &#123;</span><br><span class="line">    log.info(<span class="string">"postStop"</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 通过失效监督策略可以重启失效的子 Actor 对象。在</span></span><br><span class="line">  <span class="comment">// 执行重启操作的过程中，可以在重启 Actor 对象前调用该方法。</span></span><br><span class="line">  <span class="comment">// 该方法默认的实现代码会处理 Actor 对象停止运行前使用的资源，</span></span><br><span class="line">  <span class="comment">// 处理 Actor 对象的所有子对象。执行完清理操作后，postStop() 方法会自动被调用。</span></span><br><span class="line">  <span class="comment">// 通常不必重写</span></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">preRestart</span></span>(reason: <span class="type">Throwable</span>, message: <span class="type">Option</span>[<span class="type">Any</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line">    log.info(<span class="string">s"preRestart e: <span class="subst">$&#123;reason.getMessage&#125;</span>, message: <span class="subst">$&#123;message.toString&#125;</span>"</span>)</span><br><span class="line">    <span class="keyword">super</span>.preRestart(reason, message)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Actor 对象重启后回调用这个方法，使 Actor 对象能够在失效</span></span><br><span class="line">  <span class="comment">// 并重启后被初始化。该方法默认的执行代码会调用 preStart() 方法。</span></span><br><span class="line">  <span class="comment">// 通常不必重写</span></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">postRestart</span></span>(reason: <span class="type">Throwable</span>): <span class="type">Unit</span> = &#123;</span><br><span class="line">    log.info(<span class="string">s"postRestart e: <span class="subst">$&#123;reason.getMessage&#125;</span>"</span>)</span><br><span class="line">    <span class="keyword">super</span>.postRestart(reason)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">receive</span></span>: <span class="type">Receive</span> = &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"Restart"</span> =&gt;</span><br><span class="line">      log.info(<span class="string">"Restart"</span>)</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">NullPointerException</span></span><br><span class="line">    <span class="keyword">case</span> _ =&gt; log.info(<span class="string">"receive something"</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">LifeCycleDemo</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> system = <span class="type">ActorSystem</span>(<span class="string">"demo"</span>)</span><br><span class="line">    <span class="keyword">val</span> lifeCycle = <span class="type">Props</span>(classOf[<span class="type">LifeCycle</span>])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> supervisor = <span class="type">BackoffSupervisor</span>.props(</span><br><span class="line">      <span class="type">Backoff</span>.onStop(</span><br><span class="line">        lifeCycle,</span><br><span class="line">        childName = <span class="string">"myDemo"</span>,</span><br><span class="line">        minBackoff = <span class="type">Duration</span>.create(<span class="number">3</span>, <span class="type">TimeUnit</span>.<span class="type">SECONDS</span>),</span><br><span class="line">        maxBackoff = <span class="type">Duration</span>.create(<span class="number">30</span>, <span class="type">TimeUnit</span>.<span class="type">SECONDS</span>),</span><br><span class="line">        randomFactor = <span class="number">0.2</span> <span class="comment">// adds 20% "noise" to vary the intervals slightly</span></span><br><span class="line">      ).withSupervisorStrategy(</span><br><span class="line">        <span class="type">OneForOneStrategy</span>() &#123;</span><br><span class="line">          <span class="keyword">case</span> e: <span class="type">NullPointerException</span> =&gt; <span class="type">SupervisorStrategy</span>.<span class="type">Restart</span></span><br><span class="line">          <span class="keyword">case</span> _ =&gt; <span class="type">SupervisorStrategy</span>.<span class="type">Escalate</span></span><br><span class="line">        &#125;</span><br><span class="line">      ))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> actor = system.actorOf(lifeCycle, <span class="string">"lifeCycle"</span>)</span><br><span class="line">    system.actorOf(supervisor, <span class="string">"lifeCycleSupervisor"</span>)</span><br><span class="line">    actor ! <span class="string">"Test"</span></span><br><span class="line">    actor ! <span class="string">"Restart"</span></span><br><span class="line"></span><br><span class="line">    <span class="type">Thread</span>.sleep(<span class="number">1000</span>)</span><br><span class="line">    actor ! <span class="string">"Test"</span></span><br><span class="line"></span><br><span class="line">    system.terminate()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">[INFO] [09/12/2017 00:36:53.376] [demo-akka.actor.default-dispatcher-3] [akka://demo/user/lifeCycle] preStart</span></span><br><span class="line"><span class="comment">[INFO] [09/12/2017 00:36:53.376] [demo-akka.actor.default-dispatcher-3] [akka://demo/user/lifeCycle] receive something</span></span><br><span class="line"><span class="comment">[INFO] [09/12/2017 00:36:53.376] [demo-akka.actor.default-dispatcher-3] [akka://demo/user/lifeCycle] Restart</span></span><br><span class="line"><span class="comment">[INFO] [09/12/2017 00:36:53.377] [demo-akka.actor.default-dispatcher-2] [akka://demo/user/lifeCycleSupervisor/myDemo] preStart</span></span><br><span class="line"><span class="comment">[ERROR] [09/12/2017 00:36:53.398] [demo-akka.actor.default-dispatcher-3] [akka://demo/user/lifeCycle] null</span></span><br><span class="line"><span class="comment">java.lang.NullPointerException</span></span><br><span class="line"><span class="comment">	at io.binglau.scala.akka.demo.LifeCycle$$anonfun$receive$1.applyOrElse(LifeCycle.scala:49)</span></span><br><span class="line"><span class="comment">	at akka.actor.Actor.aroundReceive(Actor.scala:513)</span></span><br><span class="line"><span class="comment">	at akka.actor.Actor.aroundReceive$(Actor.scala:511)</span></span><br><span class="line"><span class="comment">	at io.binglau.scala.akka.demo.LifeCycle.aroundReceive(LifeCycle.scala:11)</span></span><br><span class="line"><span class="comment">	at akka.actor.ActorCell.receiveMessage(ActorCell.scala:527)</span></span><br><span class="line"><span class="comment">	at akka.actor.ActorCell.invoke(ActorCell.scala:496)</span></span><br><span class="line"><span class="comment">	at akka.dispatch.Mailbox.processMailbox(Mailbox.scala:257)</span></span><br><span class="line"><span class="comment">	at akka.dispatch.Mailbox.run(Mailbox.scala:224)</span></span><br><span class="line"><span class="comment">	at akka.dispatch.Mailbox.exec(Mailbox.scala:234)</span></span><br><span class="line"><span class="comment">	at akka.dispatch.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260)</span></span><br><span class="line"><span class="comment">	at akka.dispatch.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339)</span></span><br><span class="line"><span class="comment">	at akka.dispatch.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979)</span></span><br><span class="line"><span class="comment">	at akka.dispatch.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107)</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">[INFO] [09/12/2017 00:36:53.410] [demo-akka.actor.default-dispatcher-5] [akka://demo/user/lifeCycle] preRestart e: null, message: Some(Restart)</span></span><br><span class="line"><span class="comment">[INFO] [09/12/2017 00:36:53.411] [demo-akka.actor.default-dispatcher-5] [akka://demo/user/lifeCycle] postStop</span></span><br><span class="line"><span class="comment">[INFO] [09/12/2017 00:36:53.413] [demo-akka.actor.default-dispatcher-5] [akka://demo/user/lifeCycle] postRestart e: null</span></span><br><span class="line"><span class="comment">[INFO] [09/12/2017 00:36:53.413] [demo-akka.actor.default-dispatcher-5] [akka://demo/user/lifeCycle] preStart</span></span><br><span class="line"><span class="comment">[INFO] [09/12/2017 00:36:54.380] [demo-akka.actor.default-dispatcher-4] [akka://demo/user/lifeCycle] receive something</span></span><br><span class="line"><span class="comment">[INFO] [09/12/2017 00:36:54.419] [demo-akka.actor.default-dispatcher-5] [akka://demo/user/lifeCycle] postStop</span></span><br><span class="line"><span class="comment">[INFO] [09/12/2017 00:36:54.426] [demo-akka.actor.default-dispatcher-2] [akka://demo/user/lifeCycleSupervisor/myDemo] postStop</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">Process finished with exit code 0</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
+<h3 id="更改状态"><a href="#更改状态" class="headerlink" title="更改状态"></a>更改状态</h3><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> io.binglau.scala.akka.demo</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> akka.actor.&#123;<span class="type">Actor</span>, <span class="type">ActorSystem</span>, <span class="type">Props</span>&#125;</span><br><span class="line"><span class="keyword">import</span> akka.event.<span class="type">Logging</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// become(...) 使用该函数可以通过指定偏函数设置 Actor 对象的当前行为。</span></span><br><span class="line"><span class="comment">// 该函数有两个参数，第二个参数为 discardOld, 默认为 true。当该参数为 true 时，</span></span><br><span class="line"><span class="comment">// 在设置当前行为前，Actor 对象的上个行为会被丢弃。当该参数为 false 时，</span></span><br><span class="line"><span class="comment">// Actor 对象的上一个行为仍旧被保存在堆栈中，当前设置的 Actor 对象行为也会被推入</span></span><br><span class="line"><span class="comment">// 堆栈，并位于上一个行为条目的上方</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// unbecome 在上一个行为存在的情况下，使用该函数可以使 Actor 对象从当前行为</span></span><br><span class="line"><span class="comment">// 切换到上一个行为</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StatusSwap</span> <span class="keyword">extends</span> <span class="title">Actor</span></span>&#123;</span><br><span class="line">  <span class="keyword">import</span> context._</span><br><span class="line">  <span class="keyword">val</span> log = <span class="type">Logging</span>(context.system, <span class="keyword">this</span>)</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">angry</span></span>: <span class="type">Receive</span> = &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"foo"</span> =&gt; log.info(<span class="string">"I am already angry?"</span>)</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"bar"</span> =&gt;</span><br><span class="line">      become(happy)</span><br><span class="line">      log.info(<span class="string">"angry become happy"</span>)</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"return"</span> =&gt;</span><br><span class="line">      unbecome()</span><br><span class="line">      log.info(<span class="string">"angry unbecome"</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">happy</span></span>: <span class="type">Receive</span> = &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"bar"</span> =&gt; log.info(<span class="string">"I am already happy :-)"</span>)</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"foo"</span> =&gt;</span><br><span class="line">      become(angry, <span class="literal">false</span>)</span><br><span class="line"><span class="comment">//      become(angry)</span></span><br><span class="line">      log.info(<span class="string">"happy become angry"</span>)</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"return"</span> =&gt;</span><br><span class="line">      unbecome()</span><br><span class="line">      log.info(<span class="string">"happy unbecome"</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">receive</span></span>: <span class="type">Receive</span> = &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"foo"</span> =&gt;</span><br><span class="line">      log.info(<span class="string">"become angry"</span>)</span><br><span class="line">      become(angry)</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"bar"</span> =&gt;</span><br><span class="line">      log.info(<span class="string">"become happy"</span>)</span><br><span class="line">      become(happy)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// The App trait can be used to quickly turn objects into executable programs.</span></span><br><span class="line"><span class="comment">// Here, object Main inherits the main method of App.</span></span><br><span class="line"><span class="comment">// args returns the current command line arguments as an array.</span></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">StatusDemo</span> <span class="keyword">extends</span> <span class="title">App</span> </span>&#123;</span><br><span class="line"><span class="comment">//  Console.println("Hello World: " + (args mkString ", "))</span></span><br><span class="line">  <span class="keyword">val</span> system = <span class="type">ActorSystem</span>(<span class="string">"demo"</span>)</span><br><span class="line">  <span class="keyword">val</span> statusSwap = system.actorOf(<span class="type">Props</span>(classOf[<span class="type">StatusSwap</span>]), <span class="string">"statusSwap"</span>)</span><br><span class="line"></span><br><span class="line">  statusSwap ! <span class="string">"bar"</span> <span class="comment">// happy</span></span><br><span class="line">  statusSwap ! <span class="string">"bar"</span></span><br><span class="line">  statusSwap ! <span class="string">"foo"</span> <span class="comment">// angry</span></span><br><span class="line">  statusSwap ! <span class="string">"foo"</span></span><br><span class="line">  statusSwap ! <span class="string">"return"</span> <span class="comment">// happy</span></span><br><span class="line">  statusSwap ! <span class="string">"bar"</span></span><br><span class="line"></span><br><span class="line">  system.terminate()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">[INFO] [09/13/2017 23:23:03.776] [demo-akka.actor.default-dispatcher-5] [akka://demo/user/statusSwap] become happy</span></span><br><span class="line"><span class="comment">[INFO] [09/13/2017 23:23:03.777] [demo-akka.actor.default-dispatcher-5] [akka://demo/user/statusSwap] I am already happy :-)</span></span><br><span class="line"><span class="comment">[INFO] [09/13/2017 23:23:03.778] [demo-akka.actor.default-dispatcher-5] [akka://demo/user/statusSwap] happy become angry</span></span><br><span class="line"><span class="comment">[INFO] [09/13/2017 23:23:03.778] [demo-akka.actor.default-dispatcher-5] [akka://demo/user/statusSwap] I am already angry?</span></span><br><span class="line"><span class="comment">[INFO] [09/13/2017 23:23:03.778] [demo-akka.actor.default-dispatcher-5] [akka://demo/user/statusSwap] angry unbecome</span></span><br><span class="line"><span class="comment">[INFO] [09/13/2017 23:23:03.778] [demo-akka.actor.default-dispatcher-5] [akka://demo/user/statusSwap] I am already happy :-)</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
+<h3 id="监督"><a href="#监督" class="headerlink" title="监督"></a>监督</h3><p>任何创建了子 Actor 对象的 Actor 对象，都会自动变为其子 Actor 对象的监督者。如果子 Actor 对象崩溃了（例如抛出了异常），那么它的父 Actor 对象就必须在执行下列操作之间做出选择：</p>
+<ul>
+<li>使子对象继续运行</li>
+<li>重启子对象</li>
+<li>停止子对象</li>
+<li>使失效情况升级（将控制权移交给祖父对象）</li>
+</ul>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> io.binglau.scala.akka.demo</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> akka.actor.<span class="type">SupervisorStrategy</span>.&#123;<span class="type">Escalate</span>, <span class="type">Restart</span>, <span class="type">Resume</span>, <span class="type">Stop</span>&#125;</span><br><span class="line"><span class="keyword">import</span> akka.actor.&#123;<span class="type">Actor</span>, <span class="type">ActorRef</span>, <span class="type">ActorSystem</span>, <span class="type">OneForOneStrategy</span>, <span class="type">Props</span>&#125;</span><br><span class="line"><span class="keyword">import</span> akka.event.<span class="type">Logging</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> scala.concurrent.duration.<span class="type">DurationInt</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SupervisorChild</span> <span class="keyword">extends</span> <span class="title">Actor</span> </span>&#123;</span><br><span class="line">  <span class="keyword">val</span> log = <span class="type">Logging</span>(context.system, <span class="keyword">this</span>)</span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">receive</span></span>: <span class="type">Receive</span> = &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"null"</span> =&gt; <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">NullPointerException</span></span><br><span class="line">    <span class="keyword">case</span> <span class="string">"arith"</span> =&gt; <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">ArithmeticException</span></span><br><span class="line">    <span class="keyword">case</span> <span class="string">"illegal"</span> =&gt; <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">IllegalArgumentException</span></span><br><span class="line">    <span class="keyword">case</span> <span class="string">"unsupport"</span> =&gt; <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">UnsupportedOperationException</span></span><br><span class="line">    <span class="keyword">case</span> <span class="string">"exception"</span> =&gt; <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">Exception</span></span><br><span class="line">    <span class="keyword">case</span> _ =&gt; log.info(<span class="string">"unknow"</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Supervisor</span> <span class="keyword">extends</span> <span class="title">Actor</span> </span>&#123;</span><br><span class="line">  <span class="keyword">import</span> context._</span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> log = <span class="type">Logging</span>(context.system, <span class="keyword">this</span>)</span><br><span class="line">  <span class="keyword">var</span> child: <span class="type">ActorRef</span> = <span class="type">Actor</span>.noSender</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 实例化一个 SupervisorStrategy 子类 (AllForOneStrategy / OneForOneStrategy)。</span></span><br><span class="line">  <span class="comment">// 通常只是声明 OneForOneStrategy 子类，因为该策略仅会应用于崩溃的子 Actor 对象。</span></span><br><span class="line">  <span class="comment">// 使用 AllForOneStrategy 子类的情况比较少，因为它会对所有子 Actor 对象产生 Decider 偏</span></span><br><span class="line">  <span class="comment">// 函数效果（将失效情况与处理手段对应起来），而不是仅对崩溃的子 Actor 对象生效</span></span><br><span class="line">  <span class="keyword">override</span> <span class="keyword">val</span> supervisorStrategy =</span><br><span class="line">    <span class="type">OneForOneStrategy</span>(</span><br><span class="line">      maxNrOfRetries = <span class="number">5</span>, <span class="comment">// 运行 Actor 对象崩溃的次数, -1 为次数不限</span></span><br><span class="line">      withinTimeRange = <span class="number">1</span> minute <span class="comment">// 放弃 Actor 对象前重新启动该对象的时限</span></span><br><span class="line">    ) &#123; <span class="comment">// Decider 偏函数</span></span><br><span class="line">      <span class="keyword">case</span> _: <span class="type">NullPointerException</span> =&gt; <span class="type">Restart</span> <span class="comment">// 重启</span></span><br><span class="line">      <span class="keyword">case</span> _: <span class="type">ArithmeticException</span> =&gt; <span class="type">Resume</span> <span class="comment">// 保持原状态继续运行</span></span><br><span class="line">      <span class="keyword">case</span> _: <span class="type">IllegalArgumentException</span> =&gt; <span class="type">Stop</span> <span class="comment">// 停止</span></span><br><span class="line">      <span class="keyword">case</span> _: <span class="type">UnsupportedOperationException</span> =&gt; <span class="type">Stop</span> <span class="comment">// 停止</span></span><br><span class="line">      <span class="keyword">case</span> _: <span class="type">Exception</span> =&gt; <span class="type">Escalate</span> <span class="comment">// 失效，处理权移交给祖父对象</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">input</span></span>: <span class="type">Receive</span> = &#123;</span><br><span class="line">    <span class="keyword">case</span> msg: <span class="type">String</span> =&gt; child ! msg</span><br><span class="line">    <span class="keyword">case</span> _ =&gt; log.info(<span class="string">"unknow"</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">receive</span></span>: <span class="type">Receive</span> = &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"A"</span> =&gt;</span><br><span class="line">      child = context.actorOf(<span class="type">Props</span>[<span class="type">SupervisorChild</span>], <span class="string">"childA"</span>)</span><br><span class="line">      become(input)</span><br><span class="line">    <span class="keyword">case</span> _ =&gt;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">NullPointerException</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">SupervisorDemo</span> <span class="keyword">extends</span> <span class="title">App</span> </span>&#123;</span><br><span class="line">  <span class="keyword">val</span> system = <span class="type">ActorSystem</span>(<span class="string">"demo"</span>)</span><br><span class="line">  <span class="keyword">val</span> supervisor = system.actorOf(<span class="type">Props</span>(classOf[<span class="type">Supervisor</span>]), <span class="string">"supervisor"</span>)</span><br><span class="line"></span><br><span class="line">  supervisor ! <span class="string">"A"</span></span><br><span class="line">  supervisor ! <span class="string">"abc"</span></span><br><span class="line">  supervisor ! <span class="string">"arith"</span></span><br><span class="line">  supervisor ! <span class="string">"null"</span></span><br><span class="line">  <span class="type">Thread</span>.sleep(<span class="number">1000</span>)</span><br><span class="line">  supervisor ! <span class="string">"abc"</span></span><br><span class="line">  supervisor ! <span class="string">"illegal"</span></span><br><span class="line">  supervisor ! <span class="string">"abc"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">[INFO] [09/14/2017 00:20:28.573] [demo-akka.actor.default-dispatcher-3] [akka://demo/user/supervisor/childA] unknow</span></span><br><span class="line"><span class="comment">[WARN] [09/14/2017 00:20:28.581] [demo-akka.actor.default-dispatcher-4] [akka://demo/user/supervisor/childA] null</span></span><br><span class="line"><span class="comment">[ERROR] [09/14/2017 00:20:28.584] [demo-akka.actor.default-dispatcher-3] [akka://demo/user/supervisor/childA] null</span></span><br><span class="line"><span class="comment">java.lang.NullPointerException</span></span><br><span class="line"><span class="comment">	at io.binglau.scala.akka.demo.SupervisorChild$$anonfun$receive$1.applyOrElse(Supervisor.scala:12)</span></span><br><span class="line"><span class="comment">	at akka.actor.Actor.aroundReceive(Actor.scala:513)</span></span><br><span class="line"><span class="comment">	at akka.actor.Actor.aroundReceive$(Actor.scala:511)</span></span><br><span class="line"><span class="comment">	at io.binglau.scala.akka.demo.SupervisorChild.aroundReceive(Supervisor.scala:9)</span></span><br><span class="line"><span class="comment">	at akka.actor.ActorCell.receiveMessage(ActorCell.scala:527)</span></span><br><span class="line"><span class="comment">	at akka.actor.ActorCell.invoke(ActorCell.scala:496)</span></span><br><span class="line"><span class="comment">	at akka.dispatch.Mailbox.processMailbox(Mailbox.scala:257)</span></span><br><span class="line"><span class="comment">	at akka.dispatch.Mailbox.run(Mailbox.scala:224)</span></span><br><span class="line"><span class="comment">	at akka.dispatch.Mailbox.exec(Mailbox.scala:234)</span></span><br><span class="line"><span class="comment">	at akka.dispatch.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260)</span></span><br><span class="line"><span class="comment">	at akka.dispatch.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339)</span></span><br><span class="line"><span class="comment">	at akka.dispatch.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979)</span></span><br><span class="line"><span class="comment">	at akka.dispatch.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107)</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">[INFO] [09/14/2017 00:20:29.572] [demo-akka.actor.default-dispatcher-4] [akka://demo/user/supervisor/childA] unknow</span></span><br><span class="line"><span class="comment">[ERROR] [09/14/2017 00:20:29.573] [demo-akka.actor.default-dispatcher-3] [akka://demo/user/supervisor/childA] null</span></span><br><span class="line"><span class="comment">java.lang.IllegalArgumentException</span></span><br><span class="line"><span class="comment">	at io.binglau.scala.akka.demo.SupervisorChild$$anonfun$receive$1.applyOrElse(Supervisor.scala:14)</span></span><br><span class="line"><span class="comment">	at akka.actor.Actor.aroundReceive(Actor.scala:513)</span></span><br><span class="line"><span class="comment">	at akka.actor.Actor.aroundReceive$(Actor.scala:511)</span></span><br><span class="line"><span class="comment">	at io.binglau.scala.akka.demo.SupervisorChild.aroundReceive(Supervisor.scala:9)</span></span><br><span class="line"><span class="comment">	at akka.actor.ActorCell.receiveMessage(ActorCell.scala:527)</span></span><br><span class="line"><span class="comment">	at akka.actor.ActorCell.invoke(ActorCell.scala:496)</span></span><br><span class="line"><span class="comment">	at akka.dispatch.Mailbox.processMailbox(Mailbox.scala:257)</span></span><br><span class="line"><span class="comment">	at akka.dispatch.Mailbox.run(Mailbox.scala:224)</span></span><br><span class="line"><span class="comment">	at akka.dispatch.Mailbox.exec(Mailbox.scala:234)</span></span><br><span class="line"><span class="comment">	at akka.dispatch.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260)</span></span><br><span class="line"><span class="comment">	at akka.dispatch.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339)</span></span><br><span class="line"><span class="comment">	at akka.dispatch.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979)</span></span><br><span class="line"><span class="comment">	at akka.dispatch.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107)</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">[INFO] [09/14/2017 00:20:29.579] [demo-akka.actor.default-dispatcher-3] [akka://demo/user/supervisor/childA] Message [java.lang.String] from Actor[akka://demo/user/supervisor#347975802] to Actor[akka://demo/user/supervisor/childA#794249311] was not delivered. [1] dead letters encountered. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.</span></span><br><span class="line"><span class="comment">[INFO] [09/14/2017 00:20:53.607] [Thread-0] [CoordinatedShutdown(akka://demo)] Starting coordinated shutdown from JVM shutdown hook</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
+<h3 id="层级结构"><a href="#层级结构" class="headerlink" title="层级结构"></a>层级结构</h3><p>当 Actor 系统被创建时，有几个 Actor 对象会随着它一起被创建。其中包括：</p>
+<ul>
+<li>root 守护对象</li>
+<li>user 守护对象（应用程序创建的 Actor 对象上方）</li>
+<li>system 守护对象</li>
+</ul>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// will look up this absolute path</span></span><br><span class="line">context.actorSelection(<span class="string">"/user/serviceA/aggregator"</span>)</span><br><span class="line"><span class="comment">// will look up sibling beneath same supervisor</span></span><br><span class="line">context.actorSelection(<span class="string">"../joe"</span>)</span><br><span class="line"><span class="comment">// remote</span></span><br><span class="line">context.actorSelection(<span class="string">"akka.tcp://app@otherhost:1234/user/serviceB"</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="订阅发布"><a href="#订阅发布" class="headerlink" title="订阅发布"></a>订阅发布</h3><p>三个分类器：</p>
+<ul>
+<li><p>LookupClassification：通过匹配指定的事件类型，支持简单的查询操作。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// must define a full order over the subscribers, expressed as expected from</span></span><br><span class="line"><span class="comment">// `java.lang.Comparable.compare`  </span></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">compareSubscribers</span></span>(a: <span class="type">Subscriber</span>, b: <span class="type">Subscriber</span>): <span class="type">Int</span> =</span><br><span class="line">  a.compareTo(b)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>SubchannelClassification：通过匹配事件的类型和子类型，支持子通道层次结构</p>
+</li>
+<li><p>ScanningClassification：在某个事件落入两个或多个通道，并且需要将该事件发布给所有合法订阅者，因而需要扫描 EventBus 类的全部分类时，应混入该特征。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// is needed for determining matching classifiers and storing them in an</span></span><br><span class="line"><span class="comment">// ordered collection</span></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">compareClassifiers</span></span>(a: <span class="type">Classifier</span>, b: <span class="type">Classifier</span>): <span class="type">Int</span> =</span><br><span class="line">  <span class="keyword">if</span> (a &lt; b) <span class="number">-1</span> <span class="keyword">else</span> <span class="keyword">if</span> (a == b) <span class="number">0</span> <span class="keyword">else</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// is needed for storing subscribers in an ordered collection  </span></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">compareSubscribers</span></span>(a: <span class="type">Subscriber</span>, b: <span class="type">Subscriber</span>): <span class="type">Int</span> =</span><br><span class="line">  a.compareTo(b)</span><br><span class="line"></span><br><span class="line"><span class="comment">// determines whether a given classifier shall match a given event; it is invoked</span></span><br><span class="line"><span class="comment">// for each subscription for all received events, hence the name of the classifier  </span></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">matches</span></span>(classifier: <span class="type">Classifier</span>, event: <span class="type">Event</span>): <span class="type">Boolean</span> =</span><br><span class="line">  event.length &lt;= classifier</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> io.binglau.scala.akka.demo</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> akka.actor.&#123;<span class="type">ActorRef</span>, <span class="type">ActorSystem</span>, <span class="type">Props</span>&#125;</span><br><span class="line"><span class="keyword">import</span> akka.event.&#123;<span class="type">EventBus</span>, <span class="type">SubchannelClassification</span>&#125;</span><br><span class="line"><span class="keyword">import</span> akka.util.<span class="type">Subclassification</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> <span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">MsgEnvelope</span>(<span class="params">topic: <span class="type">String</span>, payload: <span class="type">Any</span></span>)</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">StartsWithSubClassification</span> <span class="keyword">extends</span> <span class="title">Subclassification</span>[<span class="type">String</span>] </span>&#123;</span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">isEqual</span></span>(x: <span class="type">String</span>, y: <span class="type">String</span>): <span class="type">Boolean</span> = x == y</span><br><span class="line"></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">isSubclass</span></span>(x: <span class="type">String</span>, y: <span class="type">String</span>): <span class="type">Boolean</span> = x.startsWith(y)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubChannel</span> <span class="keyword">extends</span> <span class="title">EventBus</span> <span class="keyword">with</span> <span class="title">SubchannelClassification</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 需要处理的订阅事件</span></span><br><span class="line">  <span class="keyword">override</span> <span class="class"><span class="keyword">type</span> <span class="title">Event</span> </span>= <span class="type">MsgEnvelope</span></span><br><span class="line">  <span class="comment">// 分类器</span></span><br><span class="line">  <span class="keyword">override</span> <span class="class"><span class="keyword">type</span> <span class="title">Classifier</span> </span>= <span class="type">String</span></span><br><span class="line">  <span class="comment">// 发布器</span></span><br><span class="line">  <span class="keyword">override</span> <span class="class"><span class="keyword">type</span> <span class="title">Subscriber</span> </span>= <span class="type">ActorRef</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 提供两种方法 isEqual 和 isSubClass，将分类器作为一个参数 x 与 classify 返回的值作为另一个参数传入,</span></span><br><span class="line">  <span class="comment">// 两个方法返回任意 true 则可进入</span></span><br><span class="line">  <span class="keyword">override</span> <span class="keyword">protected</span> <span class="keyword">implicit</span> <span class="function"><span class="keyword">def</span> <span class="title">subclassification</span></span>: <span class="type">Subclassification</span>[<span class="type">Classifier</span>] = <span class="keyword">new</span> <span class="type">StartsWithSubClassification</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 订阅事件哪部分作为分类信息</span></span><br><span class="line">  <span class="keyword">override</span> <span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">classify</span></span>(event: <span class="type">Event</span>): <span class="type">Classifier</span> = event.topic</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 分类之后的发布操作</span></span><br><span class="line">  <span class="keyword">override</span> <span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">publish</span></span>(event: <span class="type">Event</span>, subscriber: <span class="type">Subscriber</span>): <span class="type">Unit</span> = &#123;</span><br><span class="line">    subscriber ! event.payload</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">SubchannelDemo</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> system = <span class="type">ActorSystem</span>(<span class="string">"Test"</span>)</span><br><span class="line">    <span class="keyword">val</span> print = system.actorOf(<span class="type">Props</span>(classOf[<span class="type">Print</span>]), <span class="string">"print"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> subchannelBus = <span class="keyword">new</span> <span class="type">SubChannel</span></span><br><span class="line">    <span class="comment">// 设置发布器和分类器</span></span><br><span class="line">    subchannelBus.subscribe(print, <span class="string">"abc"</span>)</span><br><span class="line">    subchannelBus.publish(<span class="type">MsgEnvelope</span>(<span class="string">"xyzabc"</span>, <span class="string">"x"</span>))</span><br><span class="line">    subchannelBus.publish(<span class="type">MsgEnvelope</span>(<span class="string">"bcdef"</span>, <span class="string">"b"</span>))</span><br><span class="line">    subchannelBus.publish(<span class="type">MsgEnvelope</span>(<span class="string">"abc"</span>, <span class="string">"c"</span>))</span><br><span class="line">    subchannelBus.publish(<span class="type">MsgEnvelope</span>(<span class="string">"abcdef"</span>, <span class="string">"d"</span>))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">[INFO] [09/14/2017 23:42:47.268] [Test-akka.actor.default-dispatcher-5] [akka://Test/user/print] receive c</span></span><br><span class="line"><span class="comment">[INFO] [09/14/2017 23:42:47.269] [Test-akka.actor.default-dispatcher-5] [akka://Test/user/print] receive d</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
+<h3 id="Dispatchers"><a href="#Dispatchers" class="headerlink" title="Dispatchers"></a>Dispatchers</h3><blockquote>
+<p> 添加配置在 /src/main/resources 中添加一份 application.conf</p>
+<p> An Akka <code>MessageDispatcher</code> is what makes Akka Actors “tick”, it is the engine of the machine so to speak. All <code>MessageDispatcher</code> implementations are also an <code>ExecutionContext</code>, which means that they can be used to execute arbitrary code, for instance <a href="http://doc.akka.io/docs/akka/current/scala/futures.html" target="_blank" rel="noopener">Futures</a>.</p>
+</blockquote>
+<h4 id="通过下面代码可以得到一个配置的-Dispatcher"><a href="#通过下面代码可以得到一个配置的-Dispatcher" class="headerlink" title="通过下面代码可以得到一个配置的 Dispatcher"></a>通过下面代码可以得到一个配置的 Dispatcher</h4><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// for use with Futures, Scheduler, etc.</span></span><br><span class="line"><span class="keyword">implicit</span> <span class="keyword">val</span> executionContext = system.dispatchers.lookup(<span class="string">"my-dispatcher"</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="设置-Dispatcher"><a href="#设置-Dispatcher" class="headerlink" title="设置 Dispatcher"></a>设置 Dispatcher</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">my-dispatcher &#123;</span><br><span class="line">  # Dispatcher is the name of the event-based dispatcher</span><br><span class="line">  type = Dispatcher</span><br><span class="line">  # What kind of ExecutionService to use</span><br><span class="line">  executor = &quot;fork-join-executor&quot;</span><br><span class="line">  # Configuration for the fork join pool</span><br><span class="line">  fork-join-executor &#123;</span><br><span class="line">    # Min number of threads to cap factor-based parallelism number to</span><br><span class="line">    parallelism-min = 2</span><br><span class="line">    # Parallelism (threads) ... ceil(available processors * factor)</span><br><span class="line">    parallelism-factor = 2.0</span><br><span class="line">    # Max number of threads to cap factor-based parallelism number to</span><br><span class="line">    parallelism-max = 10</span><br><span class="line">  &#125;</span><br><span class="line">  # Throughput defines the maximum number of messages to be</span><br><span class="line">  # processed per actor before the thread jumps to the next actor.</span><br><span class="line">  # Set to 1 for as fair as possible.</span><br><span class="line">  throughput = 100</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>配置Actor使用一个特定的disptacher:</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> akka.actor.<span class="type">Props</span></span><br><span class="line"><span class="keyword">val</span> myActor = context.actorOf(<span class="type">Props</span>[<span class="type">MyActor</span>], <span class="string">"myactor"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">akka.actor.deployment &#123;</span><br><span class="line">  /myactor &#123;</span><br><span class="line">    dispatcher = my-dispatcher</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>或者在代码中设置</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> akka.actor.<span class="type">Props</span></span><br><span class="line"><span class="keyword">val</span> myActor =</span><br><span class="line">  context.actorOf(<span class="type">Props</span>[<span class="type">MyActor</span>].withDispatcher(<span class="string">"my-dispatcher"</span>), <span class="string">"myactor1"</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="type"><a href="#type" class="headerlink" title="type"></a>type</h4><ul>
+<li><p><strong>Dispatcher</strong></p>
+<p>This is an event-based dispatcher that binds a set of Actors to a thread pool. It is the default dispatcher used if one is not specified.</p>
+<ul>
+<li>可共享性: 无限制</li>
+<li>邮箱: 任何一种类型，为每一个Actor创建一个</li>
+<li>使用场景: 默认派发器，Bulkheading</li>
+<li>底层使用: <code>java.util.concurrent.ExecutorService</code><br>可以指定“executor”使用“fork-join-executor”, “thread-pool-executor” 或者 the FQCN(类名的全称) of an akka.dispatcher.ExecutorServiceConfigurator</li>
+</ul>
+</li>
+<li><p><strong>PinnedDispatcher</strong></p>
+<p>This dispatcher dedicates a unique thread for each actor using it; i.e. each actor will have its own thread pool with only one thread in the pool.</p>
+<ul>
+<li>可共享性: 无</li>
+<li>邮箱: 任何一种类型，为每个Actor创建一个</li>
+<li>使用场景: Bulkheading</li>
+<li>底层使用: 任何 akka.dispatch.ThreadPoolExecutorConfigurator<br>缺省为一个 “thread-pool-executor”</li>
+</ul>
+</li>
+<li><p><strong>CallingThreadDispatcher</strong></p>
+<p>This dispatcher runs invocations on the current thread only. This dispatcher does not create any new threads, but it can be used from different threads concurrently for the same actor. See <a href="http://doc.akka.io/docs/akka/current/scala/testing.html#callingthreaddispatcher" target="_blank" rel="noopener">CallingThreadDispatcher</a> for details and restrictions.</p>
+<ul>
+<li>可共享性: 无限制</li>
+<li>邮箱: 任何一种类型，每Actor每线程创建一个（需要时）</li>
+<li>使用场景: 测试</li>
+<li>底层使用: 调用的线程 (duh)</li>
+</ul>
+</li>
+</ul>
+<h3 id="确保送达机制"><a href="#确保送达机制" class="headerlink" title="确保送达机制"></a>确保送达机制</h3><p><code>at-least-once-delivery</code></p>
+<blockquote>
+<p> To send messages with at-least-once delivery semantics to destinations you can mix-in <code>AtLeastOnceDelivery</code> trait to your <code>PersistentActor</code> on the sending side. It takes care of re-sending messages when they have not been confirmed within a configurable timeout.</p>
+<p> 结合持久化保证一定时间被确认（发送端）</p>
+<p> The state of the sending actor, including which messages have been sent that have not been confirmed by the recipient must be persistent so that it can survive a crash of the sending actor or JVM. The <code>AtLeastOnceDelivery</code> trait does not persist anything by itself. It is your responsibility to persist the intent that a message is sent and that a confirmation has been received.</p>
+<p> AtLeastOnceDelivery 不会持久化任何东西，你需要去持久化试图发送的消息并处理确认信息</p>
+</blockquote>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> io.binglau.scala.akka.demo</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> akka.actor.&#123;<span class="type">Actor</span>, <span class="type">ActorSelection</span>&#125;</span><br><span class="line"><span class="keyword">import</span> akka.event.<span class="type">Logging</span></span><br><span class="line"><span class="keyword">import</span> akka.persistence.&#123;<span class="type">AtLeastOnceDelivery</span>, <span class="type">PersistentActor</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">Msg</span>(<span class="params">deliveryId: <span class="type">Long</span>, s: <span class="type">String</span></span>)</span></span><br><span class="line"><span class="class"><span class="title">case</span> <span class="title">class</span> <span class="title">Confirm</span>(<span class="params">deliveryId: <span class="type">Long</span></span>)</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">//</span> <span class="title">sealed</span></span></span><br><span class="line"><span class="class"><span class="title">//</span> <span class="title">其修饰的trait，class只能在当前文件里面被继承</span></span></span><br><span class="line"><span class="class"><span class="title">//</span> <span class="title">用sealed修饰这样做的目的是告诉scala编译器在检查模式匹配的时候，</span></span></span><br><span class="line"><span class="class"><span class="title">//</span>   <span class="title">让scala知道这些case的所有情况，scala就能够在编译的时候进行检查，</span></span></span><br><span class="line"><span class="class"><span class="title">//</span>   <span class="title">看你写的代码是否有没有漏掉什么没case到，减少编程的错误。</span></span></span><br><span class="line"><span class="class"><span class="title">sealed</span> <span class="title">trait</span> <span class="title">Evt</span></span></span><br><span class="line"><span class="class"><span class="title">case</span> <span class="title">class</span> <span class="title">MsgSent</span>(<span class="params">s: <span class="type">String</span></span>) <span class="keyword">extends</span> <span class="title">Evt</span></span></span><br><span class="line"><span class="class"><span class="title">case</span> <span class="title">class</span> <span class="title">MsgConfirmed</span>(<span class="params">deliveryId: <span class="type">Long</span></span>) <span class="keyword">extends</span> <span class="title">Evt</span></span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">MyPersistentActor</span>(<span class="params">destination: <span class="type">ActorSelection</span></span>)</span></span><br><span class="line"><span class="class">  <span class="keyword">extends</span> <span class="title">PersistentActor</span> <span class="keyword">with</span> <span class="title">AtLeastOnceDelivery</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 在任何情况下，从主题 / 队列持久性 Actor 对象接收消息的持久性视图 Actor 实例，</span></span><br><span class="line">  <span class="comment">// 都会将它的  persistenceId 作为相应主题 / 队列持久性 Actor 对象标识符</span></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">persistenceId</span></span>: <span class="type">String</span> = <span class="string">"persistence-id"</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 通过 receiveCommand 来接受新消息</span></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">receiveCommand</span></span>: <span class="type">Receive</span> = &#123;</span><br><span class="line">    <span class="comment">// To send messages to the destination path, use the **deliver** method after</span></span><br><span class="line">    <span class="comment">// you have persisted the intent to send the message.</span></span><br><span class="line">    <span class="keyword">case</span> s: <span class="type">String</span>           =&gt; persist(<span class="type">MsgSent</span>(s))(updateState)</span><br><span class="line">    <span class="comment">// The destination actor must send back a confirmation message.</span></span><br><span class="line">    <span class="comment">// When the sending actor receives this confirmation message you should</span></span><br><span class="line">    <span class="comment">// persist the fact that the message was delivered successfully</span></span><br><span class="line">    <span class="comment">// and then call the confirmDelivery method.</span></span><br><span class="line">    <span class="keyword">case</span> <span class="type">Confirm</span>(deliveryId) =&gt; persist(<span class="type">MsgConfirmed</span>(deliveryId))(updateState)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 发送确认回执</span></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">receiveRecover</span></span>: <span class="type">Receive</span> = &#123;</span><br><span class="line">    <span class="keyword">case</span> evt: <span class="type">Evt</span> =&gt; updateState(evt)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">updateState</span></span>(evt: <span class="type">Evt</span>): <span class="type">Unit</span> = evt <span class="keyword">match</span> &#123;</span><br><span class="line">    <span class="comment">// deliver自动产生一个deliveryId，这个deliveryId是发送方与接收方沟通的标志</span></span><br><span class="line">    <span class="keyword">case</span> <span class="type">MsgSent</span>(s) =&gt;</span><br><span class="line">      deliver(destination)(deliveryId =&gt; <span class="type">Msg</span>(deliveryId, s))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">case</span> <span class="type">MsgConfirmed</span>(deliveryId) =&gt; confirmDelivery(deliveryId)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyDestination</span> <span class="keyword">extends</span> <span class="title">Actor</span> </span>&#123;</span><br><span class="line">  <span class="keyword">val</span> log = <span class="type">Logging</span>(context.system, <span class="keyword">this</span>)</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">receive</span> </span>= &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">Msg</span>(deliveryId, s) =&gt;</span><br><span class="line">      log.info(s)</span><br><span class="line">      sender() ! <span class="type">Confirm</span>(deliveryId)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p> 也可参考 Stream 相关内容</p>
+</blockquote>
+<h3 id="应用Demo"><a href="#应用Demo" class="headerlink" title="应用Demo"></a>应用Demo</h3><h4 id="请求—回复模式"><a href="#请求—回复模式" class="headerlink" title="请求—回复模式"></a>请求—回复模式</h4><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> io.binglau.scala.akka.demo</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> akka.actor.&#123;<span class="type">Actor</span>, <span class="type">ActorRef</span>, <span class="type">ActorSystem</span>, <span class="type">Props</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">Request</span>(<span class="params">what: <span class="type">String</span></span>)</span></span><br><span class="line"><span class="class"><span class="title">case</span> <span class="title">class</span> <span class="title">Reply</span>(<span class="params">what: <span class="type">String</span></span>)</span></span><br><span class="line"><span class="class"><span class="title">case</span> <span class="title">class</span> <span class="title">StartWith</span>(<span class="params">server: <span class="type">ActorRef</span></span>)</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">//</span> <span class="title">方式</span></span></span><br><span class="line"><span class="class"><span class="title">//</span> 1. <span class="title">发送消息带上</span> <span class="title">server</span></span></span><br><span class="line"><span class="class"><span class="title">//</span> 2. <span class="title">初始化带上</span> <span class="title">server</span></span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">Client</span> <span class="keyword">extends</span> <span class="title">Actor</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">receive</span> </span>= &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">StartWith</span>(server) =&gt;</span><br><span class="line">      println(<span class="string">"Client: is starting..."</span>)</span><br><span class="line">      server ! <span class="type">Request</span>(<span class="string">"REQ-1"</span>)</span><br><span class="line">    <span class="keyword">case</span> <span class="type">Reply</span>(what) =&gt;</span><br><span class="line">      println(<span class="string">"Client: received response: "</span> + what)</span><br><span class="line">    <span class="keyword">case</span> _ =&gt;</span><br><span class="line">      println(<span class="string">"Client: received unexpected message"</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 一个 Actor 对象可以通过下列方式获得其他 Actor 对象的地址</span></span><br><span class="line"><span class="comment">  * 1. 一个 Actor 对象创建了另一个 Actor 对象</span></span><br><span class="line"><span class="comment">  * 2. 一个 Actor 对象收到消息，包含其他 Actor 对象地址</span></span><br><span class="line"><span class="comment">  * 3. 有时 Actor 对象可以根据名称（selection）查询 Actor，但是这么做会带来不合适的定义和实现束缚</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Server</span> <span class="keyword">extends</span> <span class="title">Actor</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">receive</span> </span>= &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">Request</span>(what) =&gt;</span><br><span class="line">      println(<span class="string">"Server: received request value: "</span> + what)</span><br><span class="line">      sender ! <span class="type">Reply</span>(<span class="string">"RESP-1 for "</span> + what)</span><br><span class="line">    <span class="keyword">case</span> _ =&gt;</span><br><span class="line">      println(<span class="string">"Server: received unexpected message"</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">RequestReplyDemo</span> <span class="keyword">extends</span> <span class="title">App</span> </span>&#123;</span><br><span class="line">  <span class="keyword">val</span> system = <span class="type">ActorSystem</span>(<span class="string">"demo"</span>)</span><br><span class="line">  <span class="keyword">val</span> client = system.actorOf(<span class="type">Props</span>[<span class="type">Client</span>], <span class="string">"client"</span>)</span><br><span class="line">  <span class="keyword">val</span> server = system.actorOf(<span class="type">Props</span>[<span class="type">Server</span>], <span class="string">"server"</span>)</span><br><span class="line">  client ! <span class="type">StartWith</span>(server)</span><br><span class="line"></span><br><span class="line">  println(<span class="string">"RequestReply: is completed."</span>)</span><br><span class="line">  system.terminate()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="管道与过滤器"><a href="#管道与过滤器" class="headerlink" title="管道与过滤器"></a>管道与过滤器</h4><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> io.binglau.scala.akka.demo</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> akka.actor.&#123;<span class="type">Actor</span>, <span class="type">ActorRef</span>, <span class="type">ActorSystem</span>, <span class="type">Props</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">ProcessIncomingOrder</span>(<span class="params">orderInfo: <span class="type">Array</span>[<span class="type">Byte</span>]</span>)</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">Authenticator</span>(<span class="params">nextFilter: <span class="type">ActorRef</span></span>) <span class="keyword">extends</span> <span class="title">Actor</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">receive</span> </span>= &#123;</span><br><span class="line">    <span class="keyword">case</span> message: <span class="type">ProcessIncomingOrder</span> =&gt;</span><br><span class="line">      <span class="keyword">val</span> text = <span class="keyword">new</span> <span class="type">String</span>(message.orderInfo)</span><br><span class="line">      println(<span class="string">s"Authenticator: processing <span class="subst">$text</span>"</span>)</span><br><span class="line">      <span class="keyword">val</span> orderText = text.replace(<span class="string">"(certificate)"</span>, <span class="string">""</span>)</span><br><span class="line">      nextFilter ! <span class="type">ProcessIncomingOrder</span>(orderText.toCharArray.map(_.toByte))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Decrypter</span>(<span class="params">nextFilter: <span class="type">ActorRef</span></span>) <span class="keyword">extends</span> <span class="title">Actor</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">receive</span> </span>= &#123;</span><br><span class="line">    <span class="keyword">case</span> message: <span class="type">ProcessIncomingOrder</span> =&gt;</span><br><span class="line">      <span class="keyword">val</span> text = <span class="keyword">new</span> <span class="type">String</span>(message.orderInfo)</span><br><span class="line">      println(<span class="string">s"Decrypter: processing <span class="subst">$text</span>"</span>)</span><br><span class="line">      <span class="keyword">val</span> orderText = text.replace(<span class="string">"(encryption)"</span>, <span class="string">""</span>)</span><br><span class="line">      nextFilter ! <span class="type">ProcessIncomingOrder</span>(orderText.toCharArray.map(_.toByte))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Deduplicator</span>(<span class="params">nextFilter: <span class="type">ActorRef</span></span>) <span class="keyword">extends</span> <span class="title">Actor</span> </span>&#123;</span><br><span class="line">  <span class="keyword">val</span> processedOrderIds = scala.collection.mutable.<span class="type">Set</span>[<span class="type">String</span>]()</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">orderIdFrom</span></span>(orderText: <span class="type">String</span>): <span class="type">String</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> orderIdIndex = orderText.indexOf(<span class="string">"id='"</span>) + <span class="number">4</span></span><br><span class="line">    <span class="keyword">val</span> orderIdLastIndex = orderText.indexOf(<span class="string">"'"</span>, orderIdIndex)</span><br><span class="line">    orderText.substring(orderIdIndex, orderIdLastIndex)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">receive</span> </span>= &#123;</span><br><span class="line">    <span class="keyword">case</span> message: <span class="type">ProcessIncomingOrder</span> =&gt;</span><br><span class="line">      <span class="keyword">val</span> text = <span class="keyword">new</span> <span class="type">String</span>(message.orderInfo)</span><br><span class="line">      println(<span class="string">s"Deduplicator: processing <span class="subst">$text</span>"</span>)</span><br><span class="line">      <span class="keyword">val</span> orderId = orderIdFrom(text)</span><br><span class="line">      <span class="keyword">if</span> (processedOrderIds.add(orderId)) &#123;</span><br><span class="line">        nextFilter ! message</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        println(<span class="string">s"Deduplicator: found duplicate order <span class="subst">$orderId</span>"</span>)</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OrderAcceptanceEndpoint</span>(<span class="params">nextFilter: <span class="type">ActorRef</span></span>) <span class="keyword">extends</span> <span class="title">Actor</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">receive</span> </span>= &#123;</span><br><span class="line">    <span class="keyword">case</span> rawOrder: <span class="type">Array</span>[<span class="type">Byte</span>] =&gt;</span><br><span class="line">      <span class="keyword">val</span> text = <span class="keyword">new</span> <span class="type">String</span>(rawOrder)</span><br><span class="line">      println(<span class="string">s"OrderAcceptanceEndpoint: processing <span class="subst">$text</span>"</span>)</span><br><span class="line">      nextFilter ! <span class="type">ProcessIncomingOrder</span>(rawOrder)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OrderManagementSystem</span> <span class="keyword">extends</span> <span class="title">Actor</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">receive</span> </span>= &#123;</span><br><span class="line">    <span class="keyword">case</span> message: <span class="type">ProcessIncomingOrder</span> =&gt;</span><br><span class="line">      <span class="keyword">val</span> text = <span class="keyword">new</span> <span class="type">String</span>(message.orderInfo)</span><br><span class="line">      println(<span class="string">s"OrderManagementSystem: processing unique order: <span class="subst">$text</span>"</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">PipesAndFilterDemo</span> <span class="keyword">extends</span> <span class="title">App</span></span>&#123;</span><br><span class="line">  <span class="keyword">val</span> system = <span class="type">ActorSystem</span>(<span class="string">"demo"</span>)</span><br><span class="line">  <span class="keyword">val</span> orderText = <span class="string">"(encryption)(certificate)&lt;order id='123'&gt;...&lt;/order&gt;"</span></span><br><span class="line">  <span class="keyword">val</span> rawOrderBytes = orderText.toCharArray.map(_.toByte)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 链式过滤器</span></span><br><span class="line">  <span class="keyword">val</span> filter5 = system.actorOf(<span class="type">Props</span>[<span class="type">OrderManagementSystem</span>], <span class="string">"orderManagementSystem"</span>)</span><br><span class="line">  <span class="keyword">val</span> filter4 = system.actorOf(<span class="type">Props</span>(classOf[<span class="type">Deduplicator</span>], filter5), <span class="string">"deduplicator"</span>)</span><br><span class="line">  <span class="keyword">val</span> filter3 = system.actorOf(<span class="type">Props</span>(classOf[<span class="type">Authenticator</span>], filter4), <span class="string">"authenticator"</span>)</span><br><span class="line">  <span class="keyword">val</span> filter2 = system.actorOf(<span class="type">Props</span>(classOf[<span class="type">Decrypter</span>], filter3), <span class="string">"decrypter"</span>)</span><br><span class="line">  <span class="keyword">val</span> filter1 = system.actorOf(<span class="type">Props</span>(classOf[<span class="type">OrderAcceptanceEndpoint</span>], filter2), <span class="string">"orderAcceptanceEndpoint"</span>)</span><br><span class="line"></span><br><span class="line">  filter1 ! rawOrderBytes</span><br><span class="line">  filter1 ! rawOrderBytes</span><br><span class="line"></span><br><span class="line">  println(<span class="string">"PipesAndFilters: is completed."</span>)</span><br><span class="line"></span><br><span class="line">  system.terminate()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="消息有效期"><a href="#消息有效期" class="headerlink" title="消息有效期"></a>消息有效期</h4><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> io.binglau.scala.akka.demo</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.<span class="type">Date</span></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.<span class="type">TimeUnit</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> akka.actor.&#123;<span class="type">Actor</span>, <span class="type">ActorRef</span>, <span class="type">ActorSystem</span>, <span class="type">Props</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> scala.concurrent.duration.<span class="type">Duration</span></span><br><span class="line"><span class="keyword">import</span> scala.util.<span class="type">Random</span></span><br><span class="line"><span class="keyword">import</span> scala.concurrent.<span class="type">ExecutionContext</span>.<span class="type">Implicits</span>.global</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 将过期判断操作信息加入消息中</span></span><br><span class="line"><span class="class"><span class="keyword">trait</span> <span class="title">ExpiringMessage</span> </span>&#123;</span><br><span class="line">  <span class="keyword">val</span> occurredOn = <span class="type">System</span>.currentTimeMillis()</span><br><span class="line">  <span class="keyword">val</span> timeToLive: <span class="type">Long</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">isExpired</span></span>: <span class="type">Boolean</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> elapsed = <span class="type">System</span>.currentTimeMillis() - occurredOn</span><br><span class="line"></span><br><span class="line">    elapsed &gt; timeToLive</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">PlaceOrder</span>(<span class="params">id: <span class="type">String</span>, itemId: <span class="type">String</span>, price: <span class="type">Double</span>, timeToLive: <span class="type">Long</span></span>) <span class="keyword">extends</span> <span class="title">ExpiringMessage</span></span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">//</span> <span class="title">模拟各种原因导致的消息传输协议延迟</span></span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">PurchaseRouter</span>(<span class="params">purchaseAgent: <span class="type">ActorRef</span></span>) <span class="keyword">extends</span> <span class="title">Actor</span> </span>&#123;</span><br><span class="line">  <span class="keyword">val</span> random = <span class="keyword">new</span> <span class="type">Random</span>((<span class="keyword">new</span> <span class="type">Date</span>()).getTime)</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">receive</span> </span>= &#123;</span><br><span class="line">    <span class="keyword">case</span> message: <span class="type">Any</span> =&gt;</span><br><span class="line">      <span class="keyword">val</span> millis = random.nextInt(<span class="number">100</span>) + <span class="number">1</span></span><br><span class="line">      println(<span class="string">s"PurchaseRouter: delaying delivery of <span class="subst">$message</span> for <span class="subst">$millis</span> milliseconds"</span>)</span><br><span class="line">      <span class="keyword">val</span> duration = <span class="type">Duration</span>.create(millis, <span class="type">TimeUnit</span>.<span class="type">MILLISECONDS</span>)</span><br><span class="line">      context.system.scheduler.scheduleOnce(duration, purchaseAgent, message)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PurchaseAgent</span> <span class="keyword">extends</span> <span class="title">Actor</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">receive</span> </span>= &#123;</span><br><span class="line">    <span class="keyword">case</span> placeOrder: <span class="type">PlaceOrder</span> =&gt;</span><br><span class="line">      <span class="keyword">if</span> (placeOrder.isExpired) &#123;</span><br><span class="line">        context.system.deadLetters ! placeOrder</span><br><span class="line">        println(<span class="string">s"PurchaseAgent: delivered expired <span class="subst">$placeOrder</span> to dead letters"</span>)</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        println(<span class="string">s"PurchaseAgent: placing order for <span class="subst">$placeOrder</span>"</span>)</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">case</span> message: <span class="type">Any</span> =&gt;</span><br><span class="line">      println(<span class="string">s"PurchaseAgent: received unexpected: <span class="subst">$message</span>"</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">MessageExpirationDemo</span> <span class="keyword">extends</span> <span class="title">App</span></span>&#123;</span><br><span class="line">  <span class="keyword">val</span> system = <span class="type">ActorSystem</span>(<span class="string">"demo"</span>)</span><br><span class="line">  <span class="keyword">val</span> purchaseAgent = system.actorOf(<span class="type">Props</span>[<span class="type">PurchaseAgent</span>], <span class="string">"purchaseAgent"</span>)</span><br><span class="line">  <span class="keyword">val</span> purchaseRouter = system.actorOf(<span class="type">Props</span>(classOf[<span class="type">PurchaseRouter</span>], purchaseAgent), <span class="string">"purchaseRouter"</span>)</span><br><span class="line"></span><br><span class="line">  purchaseRouter ! <span class="type">PlaceOrder</span>(<span class="string">"1"</span>, <span class="string">"11"</span>, <span class="number">50.00</span>, <span class="number">1000</span>)</span><br><span class="line">  purchaseRouter ! <span class="type">PlaceOrder</span>(<span class="string">"2"</span>, <span class="string">"22"</span>, <span class="number">250.00</span>, <span class="number">100</span>)</span><br><span class="line">  purchaseRouter ! <span class="type">PlaceOrder</span>(<span class="string">"3"</span>, <span class="string">"33"</span>, <span class="number">32.95</span>, <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">  <span class="type">Thread</span>.sleep(<span class="number">3000</span>)</span><br><span class="line"></span><br><span class="line">  println(<span class="string">"MessageExpiration: is completed."</span>)</span><br><span class="line">  system.terminate()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h3><p><a href="http://wiki.fnil.net/index.php?title=Clojure%E5%B9%B6%E5%8F%91" target="_blank" rel="noopener"></a></p>
+<p><a href="http://doc.akka.io/docs/akka/current/scala/index-actors.html" target="_blank" rel="noopener">Akka 官方文档</a><br>《响应式架构——消息模式 Actor 实现与 Scala、Akka 应用集成》</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/21/并发的姿势/" rel="next" title="并发的姿势">
+                <i class="fa fa-chevron-left"></i> 并发的姿势
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/21/Akka-实例/" rel="prev" title="Akka 实例">
+                Akka 实例 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Übersicht
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="刘冰鉴" />
+          <p class="site-author-name" itemprop="name">刘冰鉴</p>
+           
+              <p class="site-description motion-element" itemprop="description">issue</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-name">Artikel</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Akka-基础功能"><span class="nav-number">1.</span> <span class="nav-text">Akka 基础功能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#生命周期"><span class="nav-number">1.1.</span> <span class="nav-text">生命周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更改状态"><span class="nav-number">1.2.</span> <span class="nav-text">更改状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#监督"><span class="nav-number">1.3.</span> <span class="nav-text">监督</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#层级结构"><span class="nav-number">1.4.</span> <span class="nav-text">层级结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#订阅发布"><span class="nav-number">1.5.</span> <span class="nav-text">订阅发布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dispatchers"><span class="nav-number">1.6.</span> <span class="nav-text">Dispatchers</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#通过下面代码可以得到一个配置的-Dispatcher"><span class="nav-number">1.6.1.</span> <span class="nav-text">通过下面代码可以得到一个配置的 Dispatcher</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设置-Dispatcher"><span class="nav-number">1.6.2.</span> <span class="nav-text">设置 Dispatcher</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#type"><span class="nav-number">1.6.3.</span> <span class="nav-text">type</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#确保送达机制"><span class="nav-number">1.7.</span> <span class="nav-text">确保送达机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#应用Demo"><span class="nav-number">1.8.</span> <span class="nav-text">应用Demo</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#请求—回复模式"><span class="nav-number">1.8.1.</span> <span class="nav-text">请求—回复模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#管道与过滤器"><span class="nav-number">1.8.2.</span> <span class="nav-text">管道与过滤器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#消息有效期"><span class="nav-number">1.8.3.</span> <span class="nav-text">消息有效期</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文档"><span class="nav-number">1.9.</span> <span class="nav-text">参考文档</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">刘冰鉴</span>
+</div>
+
+
+<div class="powered-by">
+  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
