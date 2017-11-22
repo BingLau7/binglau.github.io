@@ -102,12 +102,12 @@
 <meta property="og:site_name" content="村里最好的博客">
 <meta property="og:description" content="虚拟机类加载机制概述什么是类加载虚拟机把描述类的数据从 Class 文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的 Java 类型，这就是虚拟机的类加载机制。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://github.com/BingLau7/blog/blob/master/Image/blog_33/1.png?raw=true">
-<meta property="og:updated_time" content="2017-11-22T15:18:52.000Z">
+<meta property="og:image" content="https://github.com/BingLau7/blog/blob/master/images/blog_33/1.png?raw=true">
+<meta property="og:updated_time" content="2017-11-22T16:02:57.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM系列—虚拟机类加载机制">
 <meta name="twitter:description" content="虚拟机类加载机制概述什么是类加载虚拟机把描述类的数据从 Class 文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的 Java 类型，这就是虚拟机的类加载机制。">
-<meta name="twitter:image" content="https://github.com/BingLau7/blog/blob/master/Image/blog_33/1.png?raw=true">
+<meta name="twitter:image" content="https://github.com/BingLau7/blog/blob/master/images/blog_33/1.png?raw=true">
 
 
 
@@ -378,7 +378,7 @@
 <a id="more"></a>
 <h3 id="为什么有类加载"><a href="#为什么有类加载" class="headerlink" title="为什么有类加载"></a>为什么有类加载</h3><p>Class 文件中所描述的信息，是使用字节码进行描述的，而这种描述必然是机器无法读取的，需要 JVM 在中间作用来将其转换成机器可以运行的信息。而且对于 Java 语言来说，类型的加载，连接和初始化过程都在程序运行期间完成，这虽然会令类加载时稍微增加一些性能上的开销，但是所带来的是 Java 高于 C 这类语言的灵活度，Java 里天生可以动态扩展的语言特性就是依赖运行期动态加载和动态连接这个特点实现的。</p>
 <h3 id="类加载发生在什么时候"><a href="#类加载发生在什么时候" class="headerlink" title="类加载发生在什么时候"></a>类加载发生在什么时候</h3><h4 id="类加载的生命周期"><a href="#类加载的生命周期" class="headerlink" title="类加载的生命周期"></a>类加载的生命周期</h4><p>类从被加载到虚拟机内存中开始，到卸载出内存为止，它的整个生命周期包括：加载（Loading）、验证（Verification）、准备（Preparation）、解析（Resolution）、初始化（Initialization）、使用（Using）和卸载（Unloading）7个阶段。其中验证、准备、解析3个部分统称为连接（Linking），这7个阶段的发生顺序如下图所示：</p>
-<p><img src="https://github.com/BingLau7/blog/blob/master/Image/blog_33/1.png?raw=true" alt="类的生命周期"></p>
+<p><img src="https://github.com/BingLau7/blog/blob/master/images/blog_33/1.png?raw=true" alt="类的生命周期"></p>
 <p>加载、验证、准备、初始化和卸载这5个阶段的顺序是确定的，<strong>类的加载过程必须按照这种顺序按部就班地开始，而解析阶段则不一定：它在某些情况下可以在初始化阶段之后再开始，这是为了支持Java语言的运行时绑定（也称为动态绑定或晚期绑定）</strong>。注意，这里<strong>笔者写的是按部就班地『开始』</strong>，而不是按部就班地“进行”或“完成”，强调这点是因为这些阶段通常都是互相交叉地混合式进行的，通常会在一个阶段执行的过程中调用、激活另外一个阶段。</p>
 <h4 id="类加载的时机"><a href="#类加载的时机" class="headerlink" title="类加载的时机"></a>类加载的时机</h4><p>什么情况下需要开始类加载过程的第一个阶段加载？Java虚拟机规范中并没有进行强制约束，也就是说不同虚拟机上面实现可能是不一样的，这个由虚拟机的具体实现来自由把握。</p>
 <h4 id="类初始化的时机"><a href="#类初始化的时机" class="headerlink" title="类初始化的时机"></a>类初始化的时机</h4><p>对于初始化阶段，虚拟机规范则是严格规定了<strong>有且只有</strong>5种情况必须立即对类进行“初始化”（而加载、验证、准备自然需要在此之前开始）。</p>
