@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="村里最好的博客">
 <meta property="og:description" content="本篇是个人动态规划笔记。 应用动态规划方法： 刻画一个最优解的结构特征 递归地定义最优解的值 计算最优解的值，通常采用自底向上的方法 利用计算出的信息构造一个最优解">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-22T16:05:00.000Z">
+<meta property="og:updated_time" content="2017-11-22T16:10:45.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浅谈动态规划">
 <meta name="twitter:description" content="本篇是个人动态规划笔记。 应用动态规划方法： 刻画一个最优解的结构特征 递归地定义最优解的值 计算最优解的值，通常采用自底向上的方法 利用计算出的信息构造一个最优解">
@@ -373,18 +373,18 @@
 
       
         <p>本篇是个人动态规划笔记。</p>
-<h4 id="应用动态规划方法："><a href="#应用动态规划方法：" class="headerlink" title="应用动态规划方法："></a>应用动态规划方法：</h4><ol>
+<h3 id="应用动态规划方法："><a href="#应用动态规划方法：" class="headerlink" title="应用动态规划方法："></a>应用动态规划方法：</h3><ol>
 <li>刻画一个最优解的结构特征</li>
 <li>递归地定义最优解的值</li>
 <li>计算最优解的值，通常采用自底向上的方法</li>
 <li>利用计算出的信息构造一个最优解</li>
 </ol>
 <a id="more"></a>
-<h4 id="动态规划两种等价的实现方法："><a href="#动态规划两种等价的实现方法：" class="headerlink" title="动态规划两种等价的实现方法："></a>动态规划两种等价的实现方法：</h4><ol>
+<h3 id="动态规划两种等价的实现方法："><a href="#动态规划两种等价的实现方法：" class="headerlink" title="动态规划两种等价的实现方法："></a>动态规划两种等价的实现方法：</h3><ol>
 <li>带备忘的自顶向下法：此方法仍按自然的递归形式编写过程，但过程会保存每个子问题的解（通常保存在一个数组或散列表中）。当需要一个子问题的解时，过程首先检查是否保存过此解。如果是，则直接返回保存的值，从而节省了计算时间，否则，按通常方式计算这个子问题。</li>
 <li>自底向上法：这种方法一般需要恰当定义子问题『规模』的概念，使得任何子问题的求解都只依赖于『更小的』子问题的求解。因而我们可以将子问题按规模排序，按由小至大的顺序进行求解。当求解某个子问题时，它所引来的那些更小的子问题都已求解完毕，结果已经保存。每个子问题只需求解一次，当我们求解它（也是第一次遇到它）时，它的所有前提子问题都已求解完成。</li>
 </ol>
-<h4 id="适合动态规划求解的两个要素"><a href="#适合动态规划求解的两个要素" class="headerlink" title="适合动态规划求解的两个要素"></a>适合动态规划求解的两个要素</h4><h5 id="最优子结构"><a href="#最优子结构" class="headerlink" title="最优子结构"></a>最优子结构</h5><p>如果一个问题的最优解包含其子问题的最优解没我们就称此问题具有最优子结构性质。</p>
+<h3 id="适合动态规划求解的两个要素"><a href="#适合动态规划求解的两个要素" class="headerlink" title="适合动态规划求解的两个要素"></a>适合动态规划求解的两个要素</h3><h4 id="最优子结构"><a href="#最优子结构" class="headerlink" title="最优子结构"></a>最优子结构</h4><p>如果一个问题的最优解包含其子问题的最优解没我们就称此问题具有最优子结构性质。</p>
 <p><strong>发掘此问题具有最优子结构性质的通用模式：</strong></p>
 <ol>
 <li>证明问题最优解的第一个组成部分是做出一个选择，做出这次选择产生一个或多个待解的子问题。</li>
@@ -399,9 +399,9 @@
 <li>在确定最优解使用哪些子问题时，我们需要考察多少种选择</li>
 </ol>
 <p>算法导论有两个实例值得一看。</p>
-<h5 id="重叠子问题"><a href="#重叠子问题" class="headerlink" title="重叠子问题"></a>重叠子问题</h5><p>适合用动态规划方法求解的最优化问题应该具备的第二个性质是子问题空间必须足够『小』，即问题的递归算法会反复地求解相同的子问题，而不是一直声称新的子问题，即具有重复子问题性质。</p>
-<h4 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h4><p><a href="https://github.com/BingLau7/alg/blob/master/java/src/main/java/io/github/binglau/dynamic_programming/LCS.java" target="_blank" rel="noopener">最长公共子序列</a></p>
-<h4 id="参考书籍："><a href="#参考书籍：" class="headerlink" title="参考书籍："></a>参考书籍：</h4><p>《算法导论》</p>
+<h4 id="重叠子问题"><a href="#重叠子问题" class="headerlink" title="重叠子问题"></a>重叠子问题</h4><p>适合用动态规划方法求解的最优化问题应该具备的第二个性质是子问题空间必须足够『小』，即问题的递归算法会反复地求解相同的子问题，而不是一直声称新的子问题，即具有重复子问题性质。</p>
+<h3 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h3><p><a href="https://github.com/BingLau7/alg/blob/master/java/src/main/java/io/github/binglau/dynamic_programming/LCS.java" target="_blank" rel="noopener">最长公共子序列</a></p>
+<h3 id="参考书籍："><a href="#参考书籍：" class="headerlink" title="参考书籍："></a>参考书籍：</h3><p>《算法导论》</p>
 
       
     </div>
@@ -578,7 +578,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#应用动态规划方法："><span class="nav-number">1.</span> <span class="nav-text">应用动态规划方法：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#动态规划两种等价的实现方法："><span class="nav-number">2.</span> <span class="nav-text">动态规划两种等价的实现方法：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#适合动态规划求解的两个要素"><span class="nav-number">3.</span> <span class="nav-text">适合动态规划求解的两个要素</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#最优子结构"><span class="nav-number">3.1.</span> <span class="nav-text">最优子结构</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#重叠子问题"><span class="nav-number">3.2.</span> <span class="nav-text">重叠子问题</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实例"><span class="nav-number">4.</span> <span class="nav-text">实例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考书籍："><span class="nav-number">5.</span> <span class="nav-text">参考书籍：</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#应用动态规划方法："><span class="nav-number">1.</span> <span class="nav-text">应用动态规划方法：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态规划两种等价的实现方法："><span class="nav-number">2.</span> <span class="nav-text">动态规划两种等价的实现方法：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适合动态规划求解的两个要素"><span class="nav-number">3.</span> <span class="nav-text">适合动态规划求解的两个要素</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#最优子结构"><span class="nav-number">3.1.</span> <span class="nav-text">最优子结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#重叠子问题"><span class="nav-number">3.2.</span> <span class="nav-text">重叠子问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实例"><span class="nav-number">4.</span> <span class="nav-text">实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考书籍："><span class="nav-number">5.</span> <span class="nav-text">参考书籍：</span></a></li></ol></div>
             
 
           </div>

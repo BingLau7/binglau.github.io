@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="Spring源码解析——Bean的加载前奏User user = (User)context.getBean(&amp;quot;testbean&amp;quot;); 由这句入手">
+<meta name="description" content="User user = (User)context.getBean(&amp;quot;testbean&amp;quot;); 由这句入手">
 <meta name="keywords" content="Spring,Java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring 源码解析—Bean的加载前奏">
 <meta property="og:url" content="http://yoursite.com/2017/11/14/Spring-源码解析—Bean的加载前奏/index.html">
 <meta property="og:site_name" content="村里最好的博客">
-<meta property="og:description" content="Spring源码解析——Bean的加载前奏User user = (User)context.getBean(&amp;quot;testbean&amp;quot;); 由这句入手">
+<meta property="og:description" content="User user = (User)context.getBean(&amp;quot;testbean&amp;quot;); 由这句入手">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-22T15:27:30.000Z">
+<meta property="og:updated_time" content="2017-11-22T16:08:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring 源码解析—Bean的加载前奏">
-<meta name="twitter:description" content="Spring源码解析——Bean的加载前奏User user = (User)context.getBean(&amp;quot;testbean&amp;quot;); 由这句入手">
+<meta name="twitter:description" content="User user = (User)context.getBean(&amp;quot;testbean&amp;quot;); 由这句入手">
 
 
 
@@ -372,7 +372,7 @@
       
 
       
-        <h1 id="Spring源码解析——Bean的加载前奏"><a href="#Spring源码解析——Bean的加载前奏" class="headerlink" title="Spring源码解析——Bean的加载前奏"></a>Spring源码解析——Bean的加载前奏</h1><p><code>User user = (User)context.getBean(&quot;testbean&quot;);</code></p>
+        <p><code>User user = (User)context.getBean(&quot;testbean&quot;);</code></p>
 <p>由这句入手</p>
 <a id="more"></a>
 <p><code>AbstractBeanFactory#getBean</code></p>
@@ -536,8 +536,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/12/Spring源码分析-bean的解析（3）/" rel="next" title="Spring源码分析-bean的解析（3）">
-                <i class="fa fa-chevron-left"></i> Spring源码分析-bean的解析（3）
+              <a href="/2017/11/12/Spring源码分析-bean的解析（3）/" rel="next" title="Spring-源码分析-bean的解析(3)">
+                <i class="fa fa-chevron-left"></i> Spring-源码分析-bean的解析(3)
               </a>
             
           </div>
@@ -682,7 +682,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring源码解析——Bean的加载前奏"><span class="nav-number">1.</span> <span class="nav-text">Spring源码解析——Bean的加载前奏</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#FactoryBean-的使用"><span class="nav-number">1.1.</span> <span class="nav-text">FactoryBean 的使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存中获取单例-bean"><span class="nav-number">1.2.</span> <span class="nav-text">缓存中获取单例 bean</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从-bean-的实例中获取对象"><span class="nav-number">1.3.</span> <span class="nav-text">从 bean 的实例中获取对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取单例"><span class="nav-number">1.4.</span> <span class="nav-text">获取单例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#准备创建-bean"><span class="nav-number">1.5.</span> <span class="nav-text">准备创建 bean</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#处理-override-属性"><span class="nav-number">1.5.1.</span> <span class="nav-text">处理 override 属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实例化的前置处理"><span class="nav-number">1.5.2.</span> <span class="nav-text">实例化的前置处理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实例化前的后处理器应用"><span class="nav-number">1.5.2.1.</span> <span class="nav-text">实例化前的后处理器应用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实例化后的后处理器应用"><span class="nav-number">1.5.2.2.</span> <span class="nav-text">实例化后的后处理器应用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#循环依赖"><span class="nav-number">1.6.</span> <span class="nav-text">循环依赖</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是循环依赖"><span class="nav-number">1.6.1.</span> <span class="nav-text">什么是循环依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-如何解决循环依赖"><span class="nav-number">1.6.2.</span> <span class="nav-text">Spring 如何解决循环依赖</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#构造器循环依赖"><span class="nav-number">1.6.2.1.</span> <span class="nav-text">构造器循环依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#setter-循环依赖"><span class="nav-number">1.6.2.2.</span> <span class="nav-text">setter 循环依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#prototype-范围的依赖处理"><span class="nav-number">1.6.2.3.</span> <span class="nav-text">prototype 范围的依赖处理</span></a></li></ol></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#FactoryBean-的使用"><span class="nav-number">1.</span> <span class="nav-text">FactoryBean 的使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存中获取单例-bean"><span class="nav-number">2.</span> <span class="nav-text">缓存中获取单例 bean</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从-bean-的实例中获取对象"><span class="nav-number">3.</span> <span class="nav-text">从 bean 的实例中获取对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取单例"><span class="nav-number">4.</span> <span class="nav-text">获取单例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#准备创建-bean"><span class="nav-number">5.</span> <span class="nav-text">准备创建 bean</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#处理-override-属性"><span class="nav-number">5.1.</span> <span class="nav-text">处理 override 属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实例化的前置处理"><span class="nav-number">5.2.</span> <span class="nav-text">实例化的前置处理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实例化前的后处理器应用"><span class="nav-number">5.2.1.</span> <span class="nav-text">实例化前的后处理器应用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实例化后的后处理器应用"><span class="nav-number">5.2.2.</span> <span class="nav-text">实例化后的后处理器应用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#循环依赖"><span class="nav-number">6.</span> <span class="nav-text">循环依赖</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是循环依赖"><span class="nav-number">6.1.</span> <span class="nav-text">什么是循环依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-如何解决循环依赖"><span class="nav-number">6.2.</span> <span class="nav-text">Spring 如何解决循环依赖</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#构造器循环依赖"><span class="nav-number">6.2.1.</span> <span class="nav-text">构造器循环依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#setter-循环依赖"><span class="nav-number">6.2.2.</span> <span class="nav-text">setter 循环依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#prototype-范围的依赖处理"><span class="nav-number">6.2.3.</span> <span class="nav-text">prototype 范围的依赖处理</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
