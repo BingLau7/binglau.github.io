@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="">
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -94,17 +94,18 @@
 
 
 
-<meta name="description" content="虚拟机类加载机制概述什么是类加载虚拟机把描述类的数据从 Class 文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的 Java 类型，这就是虚拟机的类加载机制。 为什么有类加载Class 文件中所描述的信息，是使用字节码进行描述的，而这种描述必然是机器无法读取的，需要 JVM 在中间作">
+<meta name="description" content="虚拟机类加载机制概述什么是类加载虚拟机把描述类的数据从 Class 文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的 Java 类型，这就是虚拟机的类加载机制。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM系列—虚拟机类加载机制">
 <meta property="og:url" content="http://yoursite.com/2017/11/21/JVM系列—虚拟机类加载机制/index.html">
 <meta property="og:site_name" content="村里最好的博客">
-<meta property="og:description" content="虚拟机类加载机制概述什么是类加载虚拟机把描述类的数据从 Class 文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的 Java 类型，这就是虚拟机的类加载机制。 为什么有类加载Class 文件中所描述的信息，是使用字节码进行描述的，而这种描述必然是机器无法读取的，需要 JVM 在中间作用来将其转换成机器可以运行的信息。而且对于 Java 语言来说，类型的加载，连接">
+<meta property="og:description" content="虚拟机类加载机制概述什么是类加载虚拟机把描述类的数据从 Class 文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的 Java 类型，这就是虚拟机的类加载机制。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://github.com/BingLau7/blog/blob/master/Image/blog_33/1.png?raw=true">
-<meta property="og:updated_time" content="2017-11-22T14:29:34.000Z">
+<meta property="og:updated_time" content="2017-11-22T14:37:48.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM系列—虚拟机类加载机制">
-<meta name="twitter:description" content="虚拟机类加载机制概述什么是类加载虚拟机把描述类的数据从 Class 文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的 Java 类型，这就是虚拟机的类加载机制。 为什么有类加载Class 文件中所描述的信息，是使用字节码进行描述的，而这种描述必然是机器无法读取的，需要 JVM 在中间作用来将其转换成机器可以运行的信息。而且对于 Java 语言来说，类型的加载，连接">
+<meta name="twitter:description" content="虚拟机类加载机制概述什么是类加载虚拟机把描述类的数据从 Class 文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的 Java 类型，这就是虚拟机的类加载机制。">
 <meta name="twitter:image" content="https://github.com/BingLau7/blog/blob/master/Image/blog_33/1.png?raw=true">
 
 
@@ -113,14 +114,14 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Muse',
+    scheme: 'Mist',
     sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
     tabs: true,
     motion: true,
     duoshuo: {
       userId: '0',
-      author: 'Author'
+      author: '博主'
     },
     algolia: {
       applicationID: '',
@@ -158,7 +159,7 @@
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
   
@@ -206,7 +207,27 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Startseite
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
           </a>
         </li>
       
@@ -216,17 +237,27 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archiv
+            归档
           </a>
         </li>
       
         
         <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
+          <a href="/tags" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
-            Tags
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
           </a>
         </li>
       
@@ -290,9 +321,9 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-21T16:59:07+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-21T16:59:07+08:00">
                 2017-11-21
               </time>
             
@@ -331,6 +362,7 @@
 
       
         <h1 id="虚拟机类加载机制"><a href="#虚拟机类加载机制" class="headerlink" title="虚拟机类加载机制"></a>虚拟机类加载机制</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><h3 id="什么是类加载"><a href="#什么是类加载" class="headerlink" title="什么是类加载"></a>什么是类加载</h3><p>虚拟机把描述类的数据从 Class 文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的 Java 类型，这就是虚拟机的类加载机制。</p>
+<a id="more"></a>
 <h3 id="为什么有类加载"><a href="#为什么有类加载" class="headerlink" title="为什么有类加载"></a>为什么有类加载</h3><p>Class 文件中所描述的信息，是使用字节码进行描述的，而这种描述必然是机器无法读取的，需要 JVM 在中间作用来将其转换成机器可以运行的信息。而且对于 Java 语言来说，类型的加载，连接和初始化过程都在程序运行期间完成，这虽然会令类加载时稍微增加一些性能上的开销，但是所带来的是 Java 高于 C 这类语言的灵活度，Java 里天生可以动态扩展的语言特性就是依赖运行期动态加载和动态连接这个特点实现的。</p>
 <h3 id="类加载发生在什么时候"><a href="#类加载发生在什么时候" class="headerlink" title="类加载发生在什么时候"></a>类加载发生在什么时候</h3><h4 id="类加载的生命周期"><a href="#类加载的生命周期" class="headerlink" title="类加载的生命周期"></a>类加载的生命周期</h4><p>类从被加载到虚拟机内存中开始，到卸载出内存为止，它的整个生命周期包括：加载（Loading）、验证（Verification）、准备（Preparation）、解析（Resolution）、初始化（Initialization）、使用（Using）和卸载（Unloading）7个阶段。其中验证、准备、解析3个部分统称为连接（Linking），这7个阶段的发生顺序如下图所示：</p>
 <p><img src="https://github.com/BingLau7/blog/blob/master/Image/blog_33/1.png?raw=true" alt="类的生命周期"></p>
@@ -572,10 +604,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Inhaltsverzeichnis
+            文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
-            Übersicht
+            站点概览
           </li>
         </ul>
       
@@ -596,13 +628,22 @@
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
                 <span class="site-state-item-count">35</span>
-                <span class="site-state-item-name">Artikel</span>
+                <span class="site-state-item-name">日志</span>
               </a>
             </div>
           
 
           
 
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
           
 
         </nav>
@@ -666,13 +707,13 @@
 
 
 <div class="powered-by">
-  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
 </div>
 
 <div class="theme-info">
-  Theme -
+  主题 -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Muse
+    NexT.Mist
   </a>
 </div>
 

@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="">
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="akka,scala," />
 
 
 
@@ -94,19 +94,21 @@
 
 
 
-<meta name="description" content="Akka 实例动态路由器 动态路由器会使用规则，这些规则具有一定的复杂性。 要接收来自动态路由器的消息，Actor 对象必须注册它感兴趣的消息，通过最基础的注册流程，Actor 对象可以告诉路由器，它对哪种消息感兴趣。也可以通过更精细的规则，要求动态路由器执行多层次的查询操作，以便为 Actor 对象传输指定的消息。 ">
+<meta name="description" content="Akka 实例动态路由器 动态路由器会使用规则，这些规则具有一定的复杂性。">
+<meta name="keywords" content="akka,scala">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Akka 实例">
-<meta property="og:url" content="http://yoursite.com/2017/11/21/Akka-实例/index.html">
+<meta property="og:url" content="http://yoursite.com/2017/09/21/Akka-实例/index.html">
 <meta property="og:site_name" content="村里最好的博客">
-<meta property="og:description" content="Akka 实例动态路由器 动态路由器会使用规则，这些规则具有一定的复杂性。 要接收来自动态路由器的消息，Actor 对象必须注册它感兴趣的消息，通过最基础的注册流程，Actor 对象可以告诉路由器，它对哪种消息感兴趣。也可以通过更精细的规则，要求动态路由器执行多层次的查询操作，以便为 Actor 对象传输指定的消息。 1234567891011121314151617181920212223242">
+<meta property="og:description" content="Akka 实例动态路由器 动态路由器会使用规则，这些规则具有一定的复杂性。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://github.com/BingLau7/blog/blob/master/Image/blog_26/%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1%E5%99%A8.png?raw=true">
 <meta property="og:image" content="https://github.com/BingLau7/blog/blob/master/Image/blog_26/%E5%88%86%E6%95%A3%E2%80%94%E8%81%9A%E9%9B%86%E8%B7%AF%E7%94%B1%E5%99%A8.png?raw=true">
 <meta property="og:image" content="https://github.com/BingLau7/blog/blob/master/Image/blog_26/%E8%BD%AE%E8%AF%A2%E6%B6%88%E8%B4%B9%E8%80%85.png?raw=true">
-<meta property="og:updated_time" content="2017-11-22T14:29:34.000Z">
+<meta property="og:updated_time" content="2017-11-22T15:17:10.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Akka 实例">
-<meta name="twitter:description" content="Akka 实例动态路由器 动态路由器会使用规则，这些规则具有一定的复杂性。 要接收来自动态路由器的消息，Actor 对象必须注册它感兴趣的消息，通过最基础的注册流程，Actor 对象可以告诉路由器，它对哪种消息感兴趣。也可以通过更精细的规则，要求动态路由器执行多层次的查询操作，以便为 Actor 对象传输指定的消息。 1234567891011121314151617181920212223242">
+<meta name="twitter:description" content="Akka 实例动态路由器 动态路由器会使用规则，这些规则具有一定的复杂性。">
 <meta name="twitter:image" content="https://github.com/BingLau7/blog/blob/master/Image/blog_26/%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1%E5%99%A8.png?raw=true">
 
 
@@ -115,14 +117,14 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Muse',
+    scheme: 'Mist',
     sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
     tabs: true,
     motion: true,
     duoshuo: {
       userId: '0',
-      author: 'Author'
+      author: '博主'
     },
     algolia: {
       applicationID: '',
@@ -136,7 +138,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/11/21/Akka-实例/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/09/21/Akka-实例/"/>
 
 
 
@@ -160,7 +162,7 @@
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
   
@@ -208,7 +210,27 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Startseite
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
           </a>
         </li>
       
@@ -218,17 +240,17 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archiv
+            归档
           </a>
         </li>
       
         
         <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
+          <a href="/tags" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
-            Tags
+            标签
           </a>
         </li>
       
@@ -265,7 +287,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/21/Akka-实例/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/21/Akka-实例/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="刘冰鉴">
@@ -292,10 +314,10 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-21T16:55:04+08:00">
-                2017-11-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-21T16:55:04+08:00">
+                2017-09-21
               </time>
             
 
@@ -304,6 +326,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/分布式/" itemprop="url" rel="index">
+                    <span itemprop="name">分布式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -334,6 +378,7 @@
       
         <h2 id="Akka-实例"><a href="#Akka-实例" class="headerlink" title="Akka 实例"></a>Akka 实例</h2><h3 id="动态路由器"><a href="#动态路由器" class="headerlink" title="动态路由器"></a>动态路由器</h3><p><img src="https://github.com/BingLau7/blog/blob/master/Image/blog_26/%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1%E5%99%A8.png?raw=true" alt="动态路由器"></p>
 <p>动态路由器会使用规则，这些规则具有一定的复杂性。</p>
+<a id="more"></a>
 <p>要接收来自动态路由器的消息，Actor 对象必须注册它感兴趣的消息，通过最基础的注册流程，Actor 对象可以告诉路由器，它对哪种消息感兴趣。也可以通过更精细的规则，要求动态路由器执行多层次的查询操作，以便为 Actor 对象传输指定的消息。</p>
 <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// TypedMessageInterestRouter.scala</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> io.binglau.scala.akka.demo.dynamic_router</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> reflect.runtime.currentMirror</span><br><span class="line"><span class="keyword">import</span> akka.actor.&#123;<span class="type">Actor</span>, <span class="type">ActorRef</span>&#125;</span><br><span class="line"><span class="keyword">import</span> scala.collection._</span><br><span class="line"></span><br><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">InterestedIn</span>(<span class="params">messageType: <span class="type">String</span></span>)</span></span><br><span class="line"><span class="class"><span class="title">case</span> <span class="title">class</span> <span class="title">NoLongerInterestedIn</span>(<span class="params">messageType: <span class="type">String</span></span>)</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">case</span> <span class="title">class</span> <span class="title">TypeAMessage</span>(<span class="params">description: <span class="type">String</span></span>)</span></span><br><span class="line"><span class="class"><span class="title">case</span> <span class="title">class</span> <span class="title">TypeBMessage</span>(<span class="params">description: <span class="type">String</span></span>)</span></span><br><span class="line"><span class="class"><span class="title">case</span> <span class="title">class</span> <span class="title">TypeCMessage</span>(<span class="params">description: <span class="type">String</span></span>)</span></span><br><span class="line"><span class="class"><span class="title">case</span> <span class="title">class</span> <span class="title">TypeDMessage</span>(<span class="params">description: <span class="type">String</span></span>)</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">//</span> <span class="title">动态路由操作</span></span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">TypedMessageInterestRouter</span>(<span class="params">dunnoInterested: <span class="type">ActorRef</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                                 canStartAfterRegistered: <span class="type">Int</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">                                 canCompleteAfterUnregistered: <span class="type">Int</span></span>) <span class="keyword">extends</span> <span class="title">Actor</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 主要接收者</span></span><br><span class="line">  <span class="keyword">val</span> interestRegistry: mutable.<span class="type">Map</span>[<span class="type">String</span>, <span class="type">ActorRef</span>] = mutable.<span class="type">Map</span>[<span class="type">String</span>, <span class="type">ActorRef</span>]()</span><br><span class="line">  <span class="comment">// 次要接收者</span></span><br><span class="line">  <span class="keyword">val</span> secondaryInterestRegistry: mutable.<span class="type">Map</span>[<span class="type">String</span>, <span class="type">ActorRef</span>] = mutable.<span class="type">Map</span>[<span class="type">String</span>, <span class="type">ActorRef</span>]()</span><br><span class="line"></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">receive</span></span>: <span class="type">Receive</span> = &#123;</span><br><span class="line">    <span class="keyword">case</span> interestedIn: <span class="type">InterestedIn</span> =&gt;</span><br><span class="line">      registerInterest(interestedIn)</span><br><span class="line">    <span class="comment">// 主要接受者由次要接收者取代(如果有)</span></span><br><span class="line">    <span class="keyword">case</span> noLongerInterestedIn: <span class="type">NoLongerInterestedIn</span> =&gt;</span><br><span class="line">      unregisterInterest(noLongerInterestedIn)</span><br><span class="line">    <span class="keyword">case</span> message: <span class="type">Any</span> =&gt;</span><br><span class="line">      sendFor(message)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 注册即加入 interestRegistry Map 中</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">registerInterest</span></span>(interestedIn: <span class="type">InterestedIn</span>): <span class="type">Unit</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> messageType = typeOfMessage(interestedIn.messageType)</span><br><span class="line">    <span class="keyword">if</span> (!interestRegistry.contains(messageType)) &#123;</span><br><span class="line">      interestRegistry(messageType) = sender</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      secondaryInterestRegistry(messageType) = sender</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (interestRegistry.size + secondaryInterestRegistry.size &gt;= canStartAfterRegistered) &#123;</span><br><span class="line">      println(<span class="string">"registry exceed limit"</span>)</span><br><span class="line">      context.system.terminate()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 查看消息是否注册及注册的 sender</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">sendFor</span></span>(message: <span class="type">Any</span>): <span class="type">Unit</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> messageType = typeOfMessage(currentMirror.reflect(message).symbol.toString)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (interestRegistry.contains(messageType)) &#123;</span><br><span class="line">      interestRegistry(messageType) forward message</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      dunnoInterested ! message</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">typeOfMessage</span></span>(rawMessageType: <span class="type">String</span>): <span class="type">String</span> = &#123;</span><br><span class="line">    rawMessageType.replace('$', ' ').replace('.', ' ').split(' ').last.trim</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> unregisterCount: <span class="type">Int</span> = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 取消注册</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">unregisterInterest</span></span>(noLongerInterestedIn: <span class="type">NoLongerInterestedIn</span>): <span class="type">Unit</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> messageType = typeOfMessage(noLongerInterestedIn.messageType)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (interestRegistry.contains(messageType)) &#123;</span><br><span class="line">      <span class="keyword">val</span> wasInterested = interestRegistry(messageType)</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (wasInterested.compareTo(sender) == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (secondaryInterestRegistry.contains(messageType)) &#123;</span><br><span class="line">          <span class="keyword">val</span> nowInterested = secondaryInterestRegistry.remove(messageType)</span><br><span class="line"></span><br><span class="line">          interestRegistry(messageType) = nowInterested.get</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          interestRegistry.remove(messageType)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        unregisterCount = unregisterCount + <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> (unregisterCount &gt;= <span class="keyword">this</span>.canCompleteAfterUnregistered) &#123;</span><br><span class="line">          println(<span class="string">"unregister count &gt; can CompleteAfterUnregistered"</span>)</span><br><span class="line">          context.system.terminate()</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 各种业务 sender</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> io.binglau.scala.akka.demo.dynamic_router</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> akka.actor.&#123;<span class="type">Actor</span>, <span class="type">ActorRef</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TypeAInterested</span>(<span class="params">interestRouter: <span class="type">ActorRef</span></span>) <span class="keyword">extends</span> <span class="title">Actor</span> </span>&#123;</span><br><span class="line">  interestRouter ! <span class="type">InterestedIn</span>(<span class="type">TypeAMessage</span>.getClass.getName)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">receive</span></span>: <span class="type">Receive</span> = &#123;</span><br><span class="line">    <span class="keyword">case</span> message: <span class="type">TypeAMessage</span> =&gt;</span><br><span class="line">      println(<span class="string">s"TypeAInterested: received: <span class="subst">$message</span>"</span>)</span><br><span class="line">    <span class="keyword">case</span> message: <span class="type">Any</span> =&gt;</span><br><span class="line">      println(<span class="string">s"TypeAInterested: received unexpected message: <span class="subst">$message</span>"</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TypeBInterested</span>(<span class="params">interestRouter: <span class="type">ActorRef</span></span>) <span class="keyword">extends</span> <span class="title">Actor</span> </span>&#123;</span><br><span class="line">  interestRouter ! <span class="type">InterestedIn</span>(<span class="type">TypeBMessage</span>.getClass.getName)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">receive</span></span>: <span class="type">Receive</span> = &#123;</span><br><span class="line">    <span class="keyword">case</span> message: <span class="type">TypeBMessage</span> =&gt;</span><br><span class="line">      println(<span class="string">s"TypeBInterested: received: <span class="subst">$message</span>"</span>)</span><br><span class="line">    <span class="keyword">case</span> message: <span class="type">Any</span> =&gt;</span><br><span class="line">      println(<span class="string">s"TypeBInterested: received unexpected message: <span class="subst">$message</span>"</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TypeCInterested</span>(<span class="params">interestRouter: <span class="type">ActorRef</span></span>) <span class="keyword">extends</span> <span class="title">Actor</span> </span>&#123;</span><br><span class="line">  interestRouter ! <span class="type">InterestedIn</span>(<span class="type">TypeCMessage</span>.getClass.getName)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">receive</span></span>: <span class="type">Receive</span> = &#123;</span><br><span class="line">    <span class="keyword">case</span> message: <span class="type">TypeCMessage</span> =&gt;</span><br><span class="line">      println(<span class="string">s"TypeCInterested: received: <span class="subst">$message</span>"</span>)</span><br><span class="line">      interestRouter ! <span class="type">NoLongerInterestedIn</span>(<span class="type">TypeCMessage</span>.getClass.getName)</span><br><span class="line">    <span class="keyword">case</span> message: <span class="type">Any</span> =&gt;</span><br><span class="line">      println(<span class="string">s"TypeCInterested: received unexpected message: <span class="subst">$message</span>"</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TypeCAlsoInterested</span>(<span class="params">interestRouter: <span class="type">ActorRef</span></span>) <span class="keyword">extends</span> <span class="title">Actor</span> </span>&#123;</span><br><span class="line">  interestRouter ! <span class="type">InterestedIn</span>(<span class="type">TypeCMessage</span>.getClass.getName)</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">receive</span> </span>= &#123;</span><br><span class="line">    <span class="keyword">case</span> message: <span class="type">TypeCMessage</span> =&gt;</span><br><span class="line">      println(<span class="string">s"TypeCAlsoInterested: received: <span class="subst">$message</span>"</span>)</span><br><span class="line"></span><br><span class="line">      interestRouter ! <span class="type">NoLongerInterestedIn</span>(<span class="type">TypeCMessage</span>.getClass.getName)</span><br><span class="line">    <span class="keyword">case</span> message: <span class="type">Any</span> =&gt;</span><br><span class="line">      println(<span class="string">s"TypeCAlsoInterested: received unexpected message: <span class="subst">$message</span>"</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -390,6 +435,14 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/akka/" rel="tag"># akka</a>
+          
+            <a href="/tags/scala/" rel="tag"># scala</a>
+          
+        </div>
+      
 
       
       
@@ -399,7 +452,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/21/Akka-基础功能/" rel="next" title="Akka 基础功能">
+              <a href="/2017/09/20/Akka-基础功能/" rel="next" title="Akka 基础功能">
                 <i class="fa fa-chevron-left"></i> Akka 基础功能
               </a>
             
@@ -409,7 +462,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/11/21/Java内存区域与内存溢出异常/" rel="prev" title="Java内存区域与内存溢出异常">
+              <a href="/2017/10/21/Java内存区域与内存溢出异常/" rel="prev" title="Java内存区域与内存溢出异常">
                 Java内存区域与内存溢出异常 <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -465,10 +518,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Inhaltsverzeichnis
+            文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
-            Übersicht
+            站点概览
           </li>
         </ul>
       
@@ -489,13 +542,31 @@
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
                 <span class="site-state-item-count">35</span>
-                <span class="site-state-item-name">Artikel</span>
+                <span class="site-state-item-name">日志</span>
               </a>
             </div>
           
 
           
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
 
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
           
 
         </nav>
@@ -559,13 +630,13 @@
 
 
 <div class="powered-by">
-  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
 </div>
 
 <div class="theme-info">
-  Theme -
+  主题 -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Muse
+    NexT.Mist
   </a>
 </div>
 
