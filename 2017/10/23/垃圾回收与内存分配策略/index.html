@@ -116,7 +116,7 @@
 <meta property="og:image" content="https://github.com/BingLau7/blog/blob/master/images/blog_28/g1.png?raw=true">
 <meta property="og:image" content="https://github.com/BingLau7/blog/blob/master/images/blog_28/jvmArg_1.png?raw=true">
 <meta property="og:image" content="https://github.com/BingLau7/blog/blob/master/images/blog_28/jvmArg_2.png?raw=true">
-<meta property="og:updated_time" content="2017-11-22T15:49:33.000Z">
+<meta property="og:updated_time" content="2018-07-18T15:59:49.081Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="垃圾回收与内存分配策略">
 <meta name="twitter:description" content="谈及 GC 自然是需要先谈及如何触发 GC，GC 作为垃圾回收器，自然是需要定义内存中『垃圾』的，那么怎么定义自然就成了关键。总体来说有以下的思路。">
@@ -391,7 +391,22 @@
 <a id="more"></a>
 <h2 id="标记算法"><a href="#标记算法" class="headerlink" title="标记算法"></a>标记算法</h2><h3 id="计数引用"><a href="#计数引用" class="headerlink" title="计数引用"></a>计数引用</h3><p>简单思路，引用 +1，失效 -1。对于循环引用无效。比较简单且 JVM 不是使用这种方法的，所以不进行深入介绍了。</p>
 <p><a href="https://zh.wikipedia.org/wiki/%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0" target="_blank" rel="noopener">维基百科</a></p>
-<h3 id="可达性分析"><a href="#可达性分析" class="headerlink" title="可达性分析"></a>可达性分析</h3><p>基本思路：它将整个内存中的对象看做一个树的形状，只要抓住根节点（<code>GC Roots</code>）并从根节点向下会形成无数子树（引用链（Reference Chain）），当一个对象没有与根节点相关联的子树的时候（这个对象从 <code>GC Roots</code> 不可达）则说明此对象不可用。</p>
+<p>采用这类 GC 的主流语言有：Python/PHP/Perl/TCL/Objective-C。</p>
+<h4 id="与追踪类算法相比优势"><a href="#与追踪类算法相比优势" class="headerlink" title="与追踪类算法相比优势"></a>与追踪类算法相比优势</h4><ol>
+<li>可以保证对象引用为0时立马得到清理，无不确定行</li>
+<li>大多数操作具有增量特性（incremental），GC 可与应用交替运行，不需要暂停应用即可完成回收功能</li>
+<li>可以用来优化运行时性能。比如函数式编程中所推崇的「<a href="https://en.wikipedia.org/wiki/Immutable_object" target="_blank" rel="noopener">不可变数据结构</a>」的更新就能收益：运行时知道某个对象的引用为1，这时对这个对象进行修改，类似 <code>str &lt;- str+&quot;a&quot;</code>，那么这个修改就可以在本地进行，而不必进行额外的 copy</li>
+</ol>
+<h4 id="劣势"><a href="#劣势" class="headerlink" title="劣势"></a>劣势</h4><ol>
+<li>无法解决循环引用。CPython 使用独特的<a href="https://docs.python.org/release/2.5.2/ext/refcounts.html" target="_blank" rel="noopener">环检测算法规避</a>；此外也可以用弱引用的方式解决，弱引用不会保护该对象被 GC 回收。如果该对象被回收了，那么这个弱引用会被赋予一个安全值（一般为NULL）。</li>
+<li>实现一个高效率的引用计数 GC 比较困难。主要包括下面两方面<ul>
+<li>space overhead，每个对象需要额外的空间来存储其引用次数，在追踪类 GC 中，用以标注对象是否在使用中的flag 位一般放在引用变量里面</li>
+<li>speed overhead，在增加/减少对象的引用时，需要修改引用次数。这对于栈上的赋值（on-stack assignment，比如函数调用是的参数、函数内部变量等）影响是非常大的，因为之前只需要简单修改寄存器里面的值，现在需要一个原子操作（这涉及到加锁，会浪费几百个 CPU cycles）</li>
+</ul>
+</li>
+<li>减少一个对象的引用计数时，会级联减少其引用对象的计数，这就可能造成同时删除过多的对象。在实现中一般会把要回收的对象放入一队列，当程序申请大小为 N 的内存时，从这个队列取出总体积不小于 N 的一个或多个对象将其回收。</li>
+</ol>
+<h3 id="可达性分析（追踪）"><a href="#可达性分析（追踪）" class="headerlink" title="可达性分析（追踪）"></a>可达性分析（追踪）</h3><p>基本思路：它将整个内存中的对象看做一个树的形状，只要抓住根节点（<code>GC Roots</code>）并从根节点向下会形成无数子树（引用链（Reference Chain）），当一个对象没有与根节点相关联的子树的时候（这个对象从 <code>GC Roots</code> 不可达）则说明此对象不可用。</p>
 <p>在 Java 中，可作为 <code>GC Roots</code> 的对象包括下面几种：</p>
 <ul>
 <li>虚拟机栈（栈帧中的本地变量表）中引用的对象。</li>
@@ -412,6 +427,13 @@
 <li>是否有必要执行（只能执行一次）<code>finalize()</code> 方法，如果有则会放入一个 <code>F-Queue</code> 队列，由一个低优先级的 <code>Finalize</code> 线程来执行它，但不会保证执行完成（防止阻塞了 <code>F-Queue</code> 队列导致内存回收崩溃）。</li>
 <li>GC 将在 <code>F-Queue</code> 中的对象进行第二次标记，如果对象想拯救自己，则需要在 <code>finalize</code> 方法给自己与 <code>GC Roots</code> 再建立上关联。</li>
 </ul>
+<p>该算法的缺点有：</p>
+<ol>
+<li>在进行 GC 期间，整个系统会被挂起（暂停，Stop-the-world），所以在一些实现中，会采用各种措施来减少这个暂停时间</li>
+<li>heap 容易出现碎片。实现中一般会进行 move 或 compact。（需要说明一点，所有 heap 回收机制都会这个问题）</li>
+<li>在 GC 工作一段时间后，heap 中连续地址上存在 age 不同的对象，这非常不利于引用的本地化（locality of reference）</li>
+<li>回收时间与 heap 大小成正比</li>
+</ol>
 <h2 id="垃圾收集算法"><a href="#垃圾收集算法" class="headerlink" title="垃圾收集算法"></a>垃圾收集算法</h2><h3 id="标记清除"><a href="#标记清除" class="headerlink" title="标记清除"></a>标记清除</h3><p><img src="https://github.com/BingLau7/blog/blob/master/images/blog_28/标记清除.png?raw=true" alt="标记清除"></p>
 <p><strong>标记：</strong>之前介绍的可达性算法标记。完成之后进行<strong>清除</strong>。</p>
 <p>缺点：</p>
@@ -419,6 +441,30 @@
 <li>标记和清除两个过程的效率都不高</li>
 <li>产生空间碎片</li>
 </ul>
+<h4 id="优化策略"><a href="#优化策略" class="headerlink" title="优化策略"></a>优化策略</h4><h5 id="Bitmap-marking"><a href="#Bitmap-marking" class="headerlink" title="Bitmap marking"></a>Bitmap marking</h5><p>将其可达性使用一个 <code>Bitmap</code> 来存储，其映射到各个 <code>Object</code> 的内存地址。这就要求 object 进行对齐，比如：heap 大小为 65536 字节，所有的对象以 16 字节对齐，那么堆内就有 4096 个地址可以作为对象的起始地址，与之对应需要 4096 个 bit 即 512 个字节。</p>
+<p>bitmap 还有下面两个优势：</p>
+<ol>
+<li>sweep 操作更高效，这是由于 bitmap 结构紧凑，可以一次性加载到内存中；通过整型的 ALU 操作与<a href="https://en.wikipedia.org/wiki/Branch_%28computer_science%29" target="_blank" rel="noopener">条件分支（conditional branch）</a> 一次性可进行 32 位的检测</li>
+<li>在类 Unix 系统中，bitmap 有利于 fork() 出来的进程与主进程进行 copy-on-write 数据共享，<a href="http://patshaughnessy.net/2012/3/23/why-you-should-be-excited-about-garbage-collection-in-ruby-2-0#" target="_blank" rel="noopener">Ruby 2.0 就因此获得较大性能提升</a>。</li>
+</ol>
+<h5 id="Lazy-sweeping"><a href="#Lazy-sweeping" class="headerlink" title="Lazy sweeping"></a>Lazy sweeping</h5><p>MS 算法有以下几个特点：</p>
+<ol>
+<li>某对象一旦被标为garbage，它永远都会是 garbage，不会被 mutator 再访问</li>
+<li>mutator 不能修改 mark-bit</li>
+</ol>
+<p>基于以上几点，sweep 操作完全可以与 mutator 同时运行（parallel）的。<br>Lazy sweep 指的是把较为耗时（相对 mark 来说）的 sweep 操作放在 allocate 过程中，并且只在有足够的空间时才去真正进行回收。<a href="https://www.infoq.com/news/2011/08/ruby193-gc" target="_blank" rel="noopener">Ruby 1.9.3 引入 lazy sweep 获得较大性能提升</a>。</p>
+<p>Lazy Sweep 除了降低 sweep 阶段 mutator 的暂停时间外，还有以下优点：</p>
+<ul>
+<li>更好的 locality。这是因为被回收的 block 会尽快地重新使用</li>
+<li>GC 复杂度只于<strong>可到达对象</strong>成正比</li>
+<li>在大部分 heap 空间为空时效率最好</li>
+</ul>
+<p><strong>除此之外还有一些优化算法如：</strong></p>
+<ul>
+<li>FIFO prefetch buffer [Cher et al, 2004]</li>
+<li>Edge marking [Garner et al, 2007]</li>
+</ul>
+<p>就不累述了。</p>
 <h3 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a><strong>复制</strong>算法</h3><p><img src="https://github.com/BingLau7/blog/blob/master/images/blog_28/复制算法.png?raw=true" alt="复制算法"></p>
 <p>将可用内存按容量<strong>划分为大小相等的两块(不一定会大小相等)</strong>，每次只使用其中的一块。当这一块的内存用完了，就将还存活着的对象<strong>复制</strong>到另外一块上面，然后再<strong>把已使用过的内存空间一次清理掉</strong>。这样使得每次都是对整个半区进行内存回收，内存分配时也就不用考虑内存碎片等复杂情况，只要移动堆顶指针，按顺序分配内存即可，实现简单，运行高效。</p>
 <p>缺点：内存占用太多。</p>
@@ -538,6 +584,8 @@
 <h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="http://ifeve.com/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3g1%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8/" target="_blank" rel="noopener">深入理解G1垃圾收集器</a></p>
 <p><a href="https://coolshell.cn/articles/1252.html" target="_blank" rel="noopener">G1新型垃圾回收器一瞥</a></p>
 <p><a href="https://tech.meituan.com/g1.html" target="_blank" rel="noopener">Java Hotspot G1 GC的一些关键技术</a></p>
+<p><a href="https://liujiacai.net/blog/2018/06/15/garbage-collection-intro/" target="_blank" rel="noopener">深入浅出垃圾回收（一）简介篇</a></p>
+<p><a href="https://liujiacai.net/blog/2018/07/08/mark-sweep/" target="_blank" rel="noopener">深入浅出垃圾回收（二）Mark-Sweep 详析及其优化</a></p>
 <p>《深入理解Java虚拟机》</p>
 
       
@@ -726,7 +774,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#标记算法"><span class="nav-number">1.</span> <span class="nav-text">标记算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#计数引用"><span class="nav-number">1.1.</span> <span class="nav-text">计数引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可达性分析"><span class="nav-number">1.2.</span> <span class="nav-text">可达性分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#垃圾收集算法"><span class="nav-number">2.</span> <span class="nav-text">垃圾收集算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#标记清除"><span class="nav-number">2.1.</span> <span class="nav-text">标记清除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复制算法"><span class="nav-number">2.2.</span> <span class="nav-text">复制算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#新生代的垃圾收集"><span class="nav-number">2.2.1.</span> <span class="nav-text">新生代的垃圾收集</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#标记整理算法"><span class="nav-number">2.3.</span> <span class="nav-text">标记整理算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#垃圾收集器"><span class="nav-number">3.</span> <span class="nav-text">垃圾收集器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安全点"><span class="nav-number">3.1.</span> <span class="nav-text">安全点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HotSpot-垃圾收集器"><span class="nav-number">3.2.</span> <span class="nav-text">HotSpot 垃圾收集器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Serial"><span class="nav-number">3.3.</span> <span class="nav-text">Serial</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ParNew"><span class="nav-number">3.4.</span> <span class="nav-text">ParNew</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Paraller-Scavenge"><span class="nav-number">3.5.</span> <span class="nav-text">Paraller Scavenge</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Serial-Old"><span class="nav-number">3.6.</span> <span class="nav-text">Serial Old</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Paraller-Old"><span class="nav-number">3.7.</span> <span class="nav-text">Paraller Old</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CMS"><span class="nav-number">3.8.</span> <span class="nav-text">CMS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#G1（Garbage-First-Garbage-Collector）-垃圾收集器"><span class="nav-number">3.9.</span> <span class="nav-text">G1（Garbage-First Garbage Collector） 垃圾收集器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#G1-的特点"><span class="nav-number">3.9.1.</span> <span class="nav-text">G1 的特点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#G1-基本思路"><span class="nav-number">3.9.2.</span> <span class="nav-text">G1 基本思路</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#对象引用不确定在哪个-Region"><span class="nav-number">3.9.2.1.</span> <span class="nav-text">对象引用不确定在哪个 Region</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#G1-具体流程（不考虑维护-Remembered-Set）"><span class="nav-number">3.9.3.</span> <span class="nav-text">G1 具体流程（不考虑维护 Remembered Set）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#G1-diff-CMS"><span class="nav-number">3.9.4.</span> <span class="nav-text">G1 diff CMS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#G1-适用场景"><span class="nav-number">3.9.5.</span> <span class="nav-text">G1 适用场景</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#垃圾收集器参数总结"><span class="nav-number">3.10.</span> <span class="nav-text">垃圾收集器参数总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存分配与回收策略"><span class="nav-number">4.</span> <span class="nav-text">内存分配与回收策略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#对象优先在-Eden-分配"><span class="nav-number">4.1.</span> <span class="nav-text">对象优先在 Eden 分配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#大对象直接进入老年代"><span class="nav-number">4.2.</span> <span class="nav-text">大对象直接进入老年代</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#长期存活的对象将进入老年代"><span class="nav-number">4.3.</span> <span class="nav-text">长期存活的对象将进入老年代</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态对象年龄判定"><span class="nav-number">4.4.</span> <span class="nav-text">动态对象年龄判定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分配空间担保"><span class="nav-number">4.5.</span> <span class="nav-text">分配空间担保</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GC-日志阅读实例（G1）"><span class="nav-number">5.</span> <span class="nav-text">GC 日志阅读实例（G1）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Young-GC"><span class="nav-number">5.1.</span> <span class="nav-text">Young GC</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">6.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#标记算法"><span class="nav-number">1.</span> <span class="nav-text">标记算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#计数引用"><span class="nav-number">1.1.</span> <span class="nav-text">计数引用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#与追踪类算法相比优势"><span class="nav-number">1.1.1.</span> <span class="nav-text">与追踪类算法相比优势</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#劣势"><span class="nav-number">1.1.2.</span> <span class="nav-text">劣势</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可达性分析（追踪）"><span class="nav-number">1.2.</span> <span class="nav-text">可达性分析（追踪）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#垃圾收集算法"><span class="nav-number">2.</span> <span class="nav-text">垃圾收集算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#标记清除"><span class="nav-number">2.1.</span> <span class="nav-text">标记清除</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#优化策略"><span class="nav-number">2.1.1.</span> <span class="nav-text">优化策略</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Bitmap-marking"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">Bitmap marking</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Lazy-sweeping"><span class="nav-number">2.1.1.2.</span> <span class="nav-text">Lazy sweeping</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复制算法"><span class="nav-number">2.2.</span> <span class="nav-text">复制算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#新生代的垃圾收集"><span class="nav-number">2.2.1.</span> <span class="nav-text">新生代的垃圾收集</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#标记整理算法"><span class="nav-number">2.3.</span> <span class="nav-text">标记整理算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#垃圾收集器"><span class="nav-number">3.</span> <span class="nav-text">垃圾收集器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安全点"><span class="nav-number">3.1.</span> <span class="nav-text">安全点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HotSpot-垃圾收集器"><span class="nav-number">3.2.</span> <span class="nav-text">HotSpot 垃圾收集器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Serial"><span class="nav-number">3.3.</span> <span class="nav-text">Serial</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ParNew"><span class="nav-number">3.4.</span> <span class="nav-text">ParNew</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Paraller-Scavenge"><span class="nav-number">3.5.</span> <span class="nav-text">Paraller Scavenge</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Serial-Old"><span class="nav-number">3.6.</span> <span class="nav-text">Serial Old</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Paraller-Old"><span class="nav-number">3.7.</span> <span class="nav-text">Paraller Old</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CMS"><span class="nav-number">3.8.</span> <span class="nav-text">CMS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#G1（Garbage-First-Garbage-Collector）-垃圾收集器"><span class="nav-number">3.9.</span> <span class="nav-text">G1（Garbage-First Garbage Collector） 垃圾收集器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#G1-的特点"><span class="nav-number">3.9.1.</span> <span class="nav-text">G1 的特点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#G1-基本思路"><span class="nav-number">3.9.2.</span> <span class="nav-text">G1 基本思路</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#对象引用不确定在哪个-Region"><span class="nav-number">3.9.2.1.</span> <span class="nav-text">对象引用不确定在哪个 Region</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#G1-具体流程（不考虑维护-Remembered-Set）"><span class="nav-number">3.9.3.</span> <span class="nav-text">G1 具体流程（不考虑维护 Remembered Set）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#G1-diff-CMS"><span class="nav-number">3.9.4.</span> <span class="nav-text">G1 diff CMS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#G1-适用场景"><span class="nav-number">3.9.5.</span> <span class="nav-text">G1 适用场景</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#垃圾收集器参数总结"><span class="nav-number">3.10.</span> <span class="nav-text">垃圾收集器参数总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存分配与回收策略"><span class="nav-number">4.</span> <span class="nav-text">内存分配与回收策略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#对象优先在-Eden-分配"><span class="nav-number">4.1.</span> <span class="nav-text">对象优先在 Eden 分配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#大对象直接进入老年代"><span class="nav-number">4.2.</span> <span class="nav-text">大对象直接进入老年代</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#长期存活的对象将进入老年代"><span class="nav-number">4.3.</span> <span class="nav-text">长期存活的对象将进入老年代</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态对象年龄判定"><span class="nav-number">4.4.</span> <span class="nav-text">动态对象年龄判定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分配空间担保"><span class="nav-number">4.5.</span> <span class="nav-text">分配空间担保</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GC-日志阅读实例（G1）"><span class="nav-number">5.</span> <span class="nav-text">GC 日志阅读实例（G1）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Young-GC"><span class="nav-number">5.1.</span> <span class="nav-text">Young GC</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">6.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
             
 
           </div>
