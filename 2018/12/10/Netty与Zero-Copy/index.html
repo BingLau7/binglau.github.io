@@ -104,16 +104,16 @@
 <meta property="og:site_name" content="村里最好的博客">
 <meta property="og:description" content="问题 零拷贝是什么，Netty 的零拷贝是什么？ 零拷贝有什么优势？">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/images/blog_netty_zero_copy/figure1.gif">
-<meta property="og:image" content="http://yoursite.com/images/blog_netty_zero_copy/figure2.gif">
-<meta property="og:image" content="http://yoursite.com/images/blog_netty_zero_copy/figure3.gif">
-<meta property="og:image" content="http://yoursite.com/images/blog_netty_zero_copy/figure4.gif">
-<meta property="og:image" content="http://yoursite.com/images/blog_netty_zero_copy/figure5.gif">
-<meta property="og:updated_time" content="2019-01-14T15:59:05.430Z">
+<meta property="og:image" content="http://yoursite.com/images/blog_netty_zero_copy/figure1.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_netty_zero_copy/figure2.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_netty_zero_copy/figure3.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_netty_zero_copy/figure4.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_netty_zero_copy/figure5.jpg">
+<meta property="og:updated_time" content="2019-01-14T16:04:13.206Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Netty与Zero Copy">
 <meta name="twitter:description" content="问题 零拷贝是什么，Netty 的零拷贝是什么？ 零拷贝有什么优势？">
-<meta name="twitter:image" content="http://yoursite.com/images/blog_netty_zero_copy/figure1.gif">
+<meta name="twitter:image" content="http://yoursite.com/images/blog_netty_zero_copy/figure1.jpg">
 
 
 
@@ -393,25 +393,25 @@
 <li>send 再切换 用户态 到 内核态，将内容 copy 到 socket 缓冲区中[1]，最后 socket 将缓冲区的内容发送（copy）到协议引擎[2]. 此处存在 2 次 copy 操作，1 次用户态与内核态的上下文切换。</li>
 </ol>
 <p>下图是其 copy </p>
-<p><img src="/images/blog_netty_zero_copy/figure1.gif" alt="1"></p>
+<p><img src="/images/blog_netty_zero_copy/figure1.jpg" alt="1"></p>
 <p>下图是其上下文切换</p>
-<p><img src="/images/blog_netty_zero_copy/figure2.gif" alt="2"></p>
+<p><img src="/images/blog_netty_zero_copy/figure2.jpg" alt="2"></p>
 <p>如上图，我们可以看出，其实从缓冲区 copy 到用户空间这两次 copy 及用户内核态直接的切换是完全可以避免的。这时候就需要使用到 zero copy 了。</p>
 <p>在 Java 中，zero copy 通常是利用 <code>FileChannel.transferTo</code> 来实现。下面是其函数签名:</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>  position</span></span><br><span class="line"><span class="comment"> *         The position within the file at which the transfer is to begin;</span></span><br><span class="line"><span class="comment"> *         must be non-negative</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>  count</span></span><br><span class="line"><span class="comment"> *         The maximum number of bytes to be transferred; must be</span></span><br><span class="line"><span class="comment"> *         non-negative</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>  target</span></span><br><span class="line"><span class="comment"> *         The target channel</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span>  The number of bytes, possibly zero,</span></span><br><span class="line"><span class="comment"> *          that were actually transferred</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transferTo</span><span class="params">(<span class="keyword">long</span> position, <span class="keyword">long</span> count, WritableByteChannel target)</span></span>;</span><br></pre></td></tr></table></figure>
 <p>transferTo() 方法将数据从文件通道传输到了给定的可写字节通道。在内部，它依赖底层操作系统对零拷贝的支持；在 UNIX 和各种 Linux 系统中，此调用被传递到 sendfile() 系统调用中。</p>
 <p>我们相较于之前的过程有什么改进呢？</p>
 <p>下图是 transferTo 的 copy 流程</p>
-<p><img src="/images/blog_netty_zero_copy/figure3.gif" alt="3"></p>
+<p><img src="/images/blog_netty_zero_copy/figure3.jpg" alt="3"></p>
 <p>下图是 transferTo 的上下文切换</p>
-<p><img src="/images/blog_netty_zero_copy/figure4.gif" alt="4"></p>
+<p><img src="/images/blog_netty_zero_copy/figure4.jpg" alt="4"></p>
 <p>改进的地方：我们将上下文切换的次数从 <strong>4 -&gt; 2</strong>次，将数据复制的次数从 <strong>4 -&gt; 3 次（其中只有一次涉及到了 CPU）</strong>。但是这个代码尚未达到我们的零拷贝要求。如果底层网络接口卡支持收集操作的话，那么我们就可以进一步减少内核的数据复制。在 Linux 内核 2.4 及后期版本中，套接字缓冲区描述符就做了相应调整，以满足该需求。这种方法不仅可以减少多个上下文切换，还可以消除需要涉及 CPU 的重复的数据拷贝。<strong>对于用户方面，用法还是一样的，但是内部操作已经发生了改变</strong>：</p>
 <ol>
 <li>transferTo() 方法引发 DMA 引擎将文件内容拷贝到内核缓冲区。</li>
 <li>数据未被拷贝到套接字缓冲区。取而代之的是，只有包含关于数据的位置和长度的信息的描述符被追加到了套接字缓冲区。DMA 引擎直接把数据从内核缓冲区传输到协议引擎，从而消除了剩下的最后一次 CPU 拷贝。</li>
 </ol>
 <p>下图是结合了 transferTo 及收集操作的数据拷贝</p>
-<p><img src="/images/blog_netty_zero_copy/figure5.gif" alt="5"></p>
+<p><img src="/images/blog_netty_zero_copy/figure5.jpg" alt="5"></p>
 <h3 id="Netty-中的-Zero-Copy"><a href="#Netty-中的-Zero-Copy" class="headerlink" title="Netty 中的 Zero Copy"></a>Netty 中的 Zero Copy</h3><p>在 Netty 的世界中 Zero Copy 其实有两层含义。</p>
 <ol>
 <li>文档中的 Transparent zero copy is achieved by built-in composite buffer type. 是指在 Java 之上（user space）允许 CompositeByteBuf 使用单个 ByteBuf 一样操作多个 ByteBuf 而不需要任何 copy，通过 <code>slice</code> 方法可以讲单个 ByteBuf 拆分为多个 ByteBuf 操作，但是其本质为操作一个 copy。更多的是指代 Netty 中对于数据高效率操作方式.</li>
