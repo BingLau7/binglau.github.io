@@ -339,8 +339,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/基础原理/" itemprop="url" rel="index">
-                    <span itemprop="name">基础原理</span>
+                  <a href="/categories/源码分析/" itemprop="url" rel="index">
+                    <span itemprop="name">源码分析</span>
                   </a>
                 </span>
 
@@ -438,7 +438,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/10/Netty与Zero-Copy/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/26/Netty与Zero-Copy/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="刘冰鉴">
@@ -457,7 +457,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/12/10/Netty与Zero-Copy/" itemprop="url">Netty与Zero Copy</a></h1>
+                <a class="post-title-link" href="/2018/12/26/Netty与Zero-Copy/" itemprop="url">Netty与Zero Copy</a></h1>
         
 
         <div class="post-meta">
@@ -469,8 +469,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-10T23:50:05+08:00">
-                2018-12-10
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-26T23:50:05+08:00">
+                2018-12-26
               </time>
             
 
@@ -536,7 +536,156 @@
 </ol>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/12/10/Netty与Zero-Copy/#more" rel="contents">
+            <a class="btn" href="/2018/12/26/Netty与Zero-Copy/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/10/Netty中的ByteBuf-Pooled与内存管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="刘冰鉴">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://github.com/BingLau7/blog/blob/master/images/drunktocat.jpg?raw=true">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="村里最好的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/10/Netty中的ByteBuf-Pooled与内存管理/" itemprop="url">Netty中的ByteBuf-Pooled与内存管理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-10T21:11:33+08:00">
+                2018-12-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/源码分析/" itemprop="url" rel="index">
+                    <span itemprop="name">源码分析</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><strong>Demo</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer();</span><br><span class="line">buf.writeBytes(<span class="string">"test"</span>.getBytes());</span><br><span class="line"></span><br><span class="line"><span class="keyword">byte</span>[] readBytes = <span class="keyword">new</span> <span class="keyword">byte</span>[buf.readableBytes()];</span><br><span class="line">buf.readBytes(readBytes);</span><br><span class="line">System.out.println(<span class="string">"read content: "</span> + <span class="keyword">new</span> String(readBytes));</span><br></pre></td></tr></table></figure>
+<p>直接看 <code>PooledByteBufAllocator.newHeapBuffer(int initialCapacity, int maxCapacity)</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> ByteBuf <span class="title">newHeapBuffer</span><span class="params">(<span class="keyword">int</span> initialCapacity, <span class="keyword">int</span> maxCapacity)</span> </span>&#123;</span><br><span class="line">    PoolThreadCache cache = threadCache.get();</span><br><span class="line">    PoolArena&lt;<span class="keyword">byte</span>[]&gt; heapArena = cache.heapArena;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> ByteBuf buf;</span><br><span class="line">    <span class="keyword">if</span> (heapArena != <span class="keyword">null</span>) &#123;</span><br><span class="line">        buf = heapArena.allocate(cache, initialCapacity, maxCapacity);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        buf = PlatformDependent.hasUnsafe() ?</span><br><span class="line">                <span class="keyword">new</span> UnpooledUnsafeHeapByteBuf(<span class="keyword">this</span>, initialCapacity, maxCapacity) :</span><br><span class="line">                <span class="keyword">new</span> UnpooledHeapByteBuf(<span class="keyword">this</span>, initialCapacity, maxCapacity);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> toLeakAwareBuffer(buf);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/12/10/Netty中的ByteBuf-Pooled与内存管理/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1646,156 +1795,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/02/Java-内存模型与线程/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="刘冰鉴">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://github.com/BingLau7/blog/blob/master/images/drunktocat.jpg?raw=true">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="村里最好的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/12/02/Java-内存模型与线程/" itemprop="url">Java 内存模型与线程</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-02T23:28:58+08:00">
-                2017-12-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/基础原理/" itemprop="url" rel="index">
-                    <span itemprop="name">基础原理</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="预热"><a href="#预热" class="headerlink" title="预热"></a>预热</h2><p>所谓并发的时代，其实不仅仅提现在并发友好的库、框架、语言在兴起，而是这种并发的思想，早已融入到计算机最底层中了。</p>
-<p>『让计算机并发执行若干个运算任务』与『更充分地利用计算机处理器的效能』之间的因果关系，看起来顺理成章，实际上它们之间的关系并没有想象中的那么简单，其中一个重要的复杂性来源是绝大多数的<strong>运算任务都不可能只靠处理器『计算』就能完成</strong>，处理器至少要与内存交互，如读取运算数据、存储运算结果等，这个I/O操作是很难消除的（无法仅靠寄存器来完成所有运算任务）。</p>
-<p>由于计算机的存储设备与处理器的运算速度有几个数量级的差距，所以现代计算机系统都不得不<strong>加入一层读写速度尽可能接近处理器运算速度的高速缓存（Cache）来作为内存与处理器之间的缓冲</strong>：将运算需要使用到的数据复制到缓存中，让运算能快速进行，当<strong>运算结束后再从缓存同步回内存之中</strong>，这样处理器就无须等待缓慢的内存读写了。</p>
-<p>嫌上面文字太长了，<strong>简单说来</strong>就是：计算机计算太快了，等不及慢的主存了，加了 L3、L2、L1 以及寄存器4个高速缓存就是为了让 IO 能快点。</p>
-<p>由此产生出了一个问题</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/12/02/Java-内存模型与线程/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1846,7 +1845,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">48</span>
+                <span class="site-state-item-count">49</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
